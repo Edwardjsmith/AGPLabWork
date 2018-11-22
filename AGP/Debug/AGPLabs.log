@@ -1,0 +1,2 @@
+﻿main.obj : error LNK2019: unresolved external symbol _D3D11CreateDeviceAndSwapChain@48 referenced in function _WinMain@16
+C:\Users\EdwardSmith\Source\Repos\AGPLabs\Debug\AGPLabs.exe : fatal error LNK1120: 1 unresolved externals
