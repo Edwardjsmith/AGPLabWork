@@ -308,9 +308,10 @@ void RenderFrame(void)
 	cb0_values.WorldViewProjection = world * view * projection;
 
 	//Upload these new values
-
+	
 	g_pImmediateContext->UpdateSubresource(g_pConstantBuffer0, 0, 0, &cb0_values, 0, 0);
-	g_pImmediateContext->VSGetConstantBuffers(0, 1, &g_pConstantBuffer0);
+	g_pImmediateContext->VSSetConstantBuffers(0, 1, &g_pConstantBuffer0);
+	
 
 	
 

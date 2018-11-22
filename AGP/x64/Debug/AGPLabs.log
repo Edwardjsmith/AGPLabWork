@@ -27,5 +27,5 @@ c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamath.h(2732)
 c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamath.h(2742): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
 c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamath.h(2743): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
 c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamath.h(2754): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
-u:\agpdirectx11\agplabs\agp6\main.cpp(303): warning C4305: 'argument': truncation from 'double' to 'FLOAT'
-  AGPLabs.vcxproj -> U:\AGPDirectX11\AGPLabs\AGP6\x64\Debug\AGPLabs.exe
+u:\agplabwork\agp\main.cpp(306): warning C4305: 'argument': truncation from 'double' to 'FLOAT'
+  AGPLabs.vcxproj -> U:\AGPLabWork\AGP\x64\Debug\AGPLabs.exe
