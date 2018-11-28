@@ -11,6 +11,12 @@ public:
 	camera(float x, float y, float z, float rotation);
 	~camera();
 
+	void Rotate(float numberOfDegrees);
+	void Forward(float distanceMoved);
+	void Up(float distance);
+
+	XMMATRIX GetViewMatrix();
+
 private:
 
 	float m_x, m_y, m_z, m_dx, m_dz, m_camera_rotation;

@@ -14,3 +14,30 @@ camera::camera(float x, float y, float z, float rotation)
 camera::~camera()
 {
 }
+
+void camera::Rotate(float numberOfDegrees)
+{
+	m_camera_rotation += numberOfDegrees;
+
+	
+}
+
+void camera::Forward(float distanceMoved)
+{
+
+}
+
+void camera::Up(float distance)
+{
+	m_y += distance;
+}
+
+XMMATRIX camera::GetViewMatrix()
+{
+	
+
+
+	return XMMATRIX();
+}
+
+
