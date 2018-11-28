@@ -9,6 +9,8 @@
 #define XM_NO_ALIGNMENT
 #include <xnamath.h>
 
+#include "camera.h"
+
 //////////////////////////////////////////////////////////////////////////////////////
 //	Global Variables
 //////////////////////////////////////////////////////////////////////////////////////
@@ -28,6 +30,8 @@ ID3D11PixelShader*	g_pPixelShader;
 ID3D11InputLayout*	g_pInputLayout;
 ID3D11Buffer*		g_pConstantBuffer0;
 ID3D11DepthStencilView* g_pZBuffer;
+
+camera* Camera;
 
 //Define vertex structure
 struct POS_COL_VERTEX//This will be added to and renamed in future tutorials
@@ -275,9 +279,9 @@ HRESULT InitialiseGraphics()
 	{
 		return hr;
 	}
-
 	g_pImmediateContext->IASetInputLayout(g_pInputLayout);
 
+	Camera = new camera(0.0f, 0.0f, -0.5f, 0.0f);
 	return S_OK;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -301,10 +305,11 @@ void RenderFrame(void)
 	cb0_values.RedAmount = 0.5f; //50 % of vertex shader value
 
 	XMMATRIX projection, world, view;
-
+	view = Camera->GetViewMatrix();
 	world = XMMatrixTranslation(0, 0, 15);
+	
 	projection = XMMatrixPerspectiveFovLH(XMConvertToRadians(45.0), 640.0 / 480.0, 1.0, 100.0);
-	view = XMMatrixIdentity();
+	
 	cb0_values.WorldViewProjection = world * view * projection;
 
 	//Upload these new values
@@ -526,6 +531,13 @@ void ShutdownD3D()
 	if (g_pD3DDevice) g_pD3DDevice->Release();
 	if (g_pBackBufferRTView) g_pBackBufferRTView->Release();
 	if (g_pD3DDevice) g_pD3DDevice->Release();
+	if (Camera)
+	{
+		delete Camera;
+		Camera = nullptr;
+	}
+
+
 }
 
 
