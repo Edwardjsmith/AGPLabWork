@@ -137,8 +137,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 HRESULT InitialiseGraphics()
 {
 	HRESULT hr = S_OK;
-	Camera = new camera(0.0f, 0.0f, -0.5f, 0.0f);
-
+	
+	Camera = new camera(0, 0, -1);
 
 	//Define vertices of a triangle - screen coordinates -1.0 to +1.0
 	POS_COL_TEX_NORM_VERTEX vertices[] =
@@ -223,6 +223,7 @@ HRESULT InitialiseGraphics()
 	
 	if (FAILED(hr))//Return an error code if failed
 	{
+		DXTRACE_MSG("Failed const buffer");
 		return hr;
 	}
 
@@ -248,6 +249,7 @@ HRESULT InitialiseGraphics()
 		error->Release();
 		if (FAILED(hr))//Don't fail if error is just a warning
 		{
+			DXTRACE_MSG("Failed vertex shader");
 			return hr;
 		}
 	}
@@ -260,6 +262,7 @@ HRESULT InitialiseGraphics()
 		error->Release();
 		if (FAILED(hr))//Don't fail if error is just a warning
 		{
+			DXTRACE_MSG("Failed shaders");
 			return hr;
 		}
 	}
@@ -268,12 +271,14 @@ HRESULT InitialiseGraphics()
 	hr = g_pD3DDevice->CreateVertexShader(VS->GetBufferPointer(), VS->GetBufferSize(), NULL, &g_pVertexShader);
 	if (FAILED(hr))
 	{
+		DXTRACE_MSG("Failed to create vertex shader");
 		return hr;
 	}
 
 	hr = g_pD3DDevice->CreatePixelShader(PS->GetBufferPointer(), PS->GetBufferSize(), NULL, &g_pPixelShader);
 	if (FAILED(hr))
 	{
+		DXTRACE_MSG("Failed to create pixel shader");
 		return hr;
 	}
 
@@ -283,6 +288,8 @@ HRESULT InitialiseGraphics()
 
 	D3DX11CreateShaderResourceViewFromFile(g_pD3DDevice, "assets/texture.bmp", NULL, NULL, &g_pTexture0, NULL);
 
+	
+
 	//Create and set the input layout object
 	D3D11_INPUT_ELEMENT_DESC iedesc[] =
 	{
@@ -291,13 +298,14 @@ HRESULT InitialiseGraphics()
 		//NOTE the spelling of COLOR. Again, be careful setting the correct dxgi format (using A32) and correct D3D version
 		{"COLOR", 0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0},
 	    {"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}
+		{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 	};
 
 
 	hr = g_pD3DDevice->CreateInputLayout(iedesc, ARRAYSIZE(iedesc), VS->GetBufferPointer(), VS->GetBufferSize(), &g_pInputLayout);
 	if (FAILED(hr))
 	{
+		DXTRACE_MSG("Failed to create input layer");
 		return hr;
 	}
 
@@ -313,6 +321,7 @@ HRESULT InitialiseGraphics()
 	hr = g_pD3DDevice->CreateSamplerState(&sampler_desc, &g_pSampler0);
 	if (FAILED(hr))
 	{
+		DXTRACE_MSG("Failed to create sampler");
 		return hr;
 	}
 
@@ -336,6 +345,26 @@ void RenderFrame(void)
 	g_directional_light_colour = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 	g_ambient_light_colour = XMVectorSet(0.1f, 0.1f, 0.1f, 1.0f);
 
+
+	if (GetAsyncKeyState('W'))
+	{
+		Camera->walk(1.0f);
+	}
+	if (GetAsyncKeyState('S'))
+	{
+		Camera->walk(-1.0f);
+	}
+	if (GetAsyncKeyState('A'))
+	{
+		Camera->strafe(-1.0f);
+	}
+	if (GetAsyncKeyState('D'))
+	{
+		Camera->strafe(1.0f);
+	}
+
+	Camera->updateViewMatrix();
+
 	//Set vertex buffer
 	UINT stride = sizeof(POS_COL_TEX_NORM_VERTEX);
 	UINT offset = 0;
@@ -346,12 +375,12 @@ void RenderFrame(void)
 	cb0_values.RedAmount = 0.5f; //50 % of vertex shader value
 
 	XMMATRIX projection, world, view;
-	view = Camera->GetViewMatrix();
+	view = Camera->View();
 	world = XMMatrixTranslation(0, 0, 15);
-	projection = XMMatrixPerspectiveFovLH(XMConvertToRadians(45.0), 640.0 / 480.0, 1.0, 100.0);
+	//projection = XMMatrixPerspectiveFovLH(XMConvertToRadians(45.0), 640.0 / 480.0, 1.0, 100.0);
 	transpose = XMMatrixTranspose(world);
 
-	cb0_values.WorldViewProjection = world * view * projection;
+	cb0_values.WorldViewProjection = world * view; //* projection;
 	cb0_values.directional_light_colour = g_directional_light_colour;
 	cb0_values.ambient_light_colour = g_ambient_light_colour;
 	cb0_values.directional_light_vector = XMVector3Transform(g_directional_light_shines_from, transpose);
