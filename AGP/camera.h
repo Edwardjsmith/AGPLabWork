@@ -4,14 +4,15 @@
 #define XM_NO_ALIGNMENT
 #include<xnamath.h>
 
+
 class camera
 {
 public:
 
-	camera(float x, float y, float z);
+	camera(float x, float y, float z, float angle);
 	~camera();
 
-	XMFLOAT3 getPos() const;
+	XMVECTOR getPos() const;
 
 	void setPos(float x, float y, float z);
 	void setPos(const XMVECTOR& value);
@@ -44,13 +45,12 @@ public:
 	XMMATRIX setLens(float fovY, float aspect, float zn, float zf);
 
 	//Define camera space via lookat
-	void lookAt(FXMVECTOR pos, FXMVECTOR target, FXMVECTOR worldUp);
-	void lookAt(const XMFLOAT3& pos, const XMFLOAT3& target, const XMFLOAT3& up);
+	void lookAt(XMVECTOR pos, XMVECTOR target, XMVECTOR worldUp);
+
 
 	//View/proj matrices
 	XMMATRIX View() const;
-	XMMATRIX Proj() const;
-	XMMATRIX viewProj() const;
+	XMMATRIX Proj(float FovY, float aspect, float nearZ, float farZ) const;
 
 	//Strafe and walk
 	void strafe(float direction);
@@ -60,10 +60,10 @@ public:
 	void Pitch(float angle);
 	void RotateY(float angle);
 
-	void updateViewMatrix();
-
 private:
-	XMVECTOR mPosition, mRight, mUp, mLook;
+	XMVECTOR mPosition, mRight, mUp, mLook, mRotation;
+	float mAngle;
+	float dx, dy, dz;
 
 
 	//Cach frustum props
@@ -79,8 +79,8 @@ private:
 	float mFarWindowWidth;
 
 	//Cache view proj matrices
-	XMVECTOR mView;
-	XMVECTOR mProj;
+	XMMATRIX mView;
+	XMMATRIX mProj;
 
 };
 

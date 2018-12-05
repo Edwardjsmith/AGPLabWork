@@ -145,7 +145,7 @@ HRESULT InitialiseGraphics()
 {
 	HRESULT hr = S_OK;
 	
-	Camera = new camera(0, 0, -0.5);
+	Camera = new camera(0, 0, -0.5, 0);
 	Timer = new timer();
 	
 
@@ -372,15 +372,16 @@ void RenderFrame(void)
 		Camera->strafe(1.0f * Timer->deltaTime());
 	}
 
-	XMFLOAT3 target;
+	XMVECTOR target;
 
 	target.x = 0;
 	target.y = 0;
 	target.z = 0;
+	target.w = 0;
 
+	XMMATRIX rotation = XMMatrixRotationY(0);
 
-	Camera->lookAt(Camera->getPos(), target, Camera->getUp());
-	Camera->updateViewMatrix();
+	//Camera->updateViewMatrix();
 
 	//Set vertex buffer
 	UINT stride = sizeof(POS_COL_TEX_NORM_VERTEX);
@@ -394,7 +395,7 @@ void RenderFrame(void)
 	XMMATRIX projection, world, view;
 	view = Camera->View();
 	world = XMMatrixTranslation(0, 0, 15);
-	projection = Camera->Proj();//XMMatrixPerspectiveFovLH(XMConvertToRadians(45.0), 640.0 / 480.0, 1.0, 100.0);
+	projection = Camera->setLens(XMConvertToRadians(45.0), 640.0 / 480.0, 1.0, 100.0);
 	transpose = XMMatrixTranspose(world);
 
 	cb0_values.WorldViewProjection = world * view * projection;
@@ -419,6 +420,9 @@ void RenderFrame(void)
 
 	g_2DText->RenderText();
 	g_2DText->AddText("Hello!", -1.0f, 1.0f, 0.2f);
+
+
+	
 
 	// Display what has just been rendered
 	g_pSwapChain->Present(0, 0);
