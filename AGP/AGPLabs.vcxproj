@@ -140,6 +140,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="objfilemodel.cpp" />
     <ClCompile Include="text2D.cpp" />
+    <ClCompile Include="timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shaders.hlsl">
@@ -156,6 +157,7 @@
     <ClInclude Include="camera.h" />
     <ClInclude Include="objfilemodel.h" />
     <ClInclude Include="text2D.h" />
+    <ClInclude Include="timer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

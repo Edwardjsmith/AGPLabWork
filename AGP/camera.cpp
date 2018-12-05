@@ -137,10 +137,24 @@ void camera::setLens(float fovY, float aspect, float zn, float zf)
 
 void camera::lookAt(FXMVECTOR pos, FXMVECTOR target, FXMVECTOR worldUp)
 {
+	XMVECTOR L = XMVector3Normalize(XMVectorSubtract(target, pos));
+	XMVECTOR R = XMVector3Normalize(XMVector3Cross(worldUp, L));
+	XMVECTOR U = XMVector3Cross(L, R);
+
+	XMStoreFloat3(&mPosition, pos);
+	XMStoreFloat3(&mLook, L);
+	XMStoreFloat3(&mRight, R);
+	XMStoreFloat3(&mUp, U);
 }
 
 void camera::lookAt(const XMFLOAT3 & pos, const XMFLOAT3 & target, const XMFLOAT3 & up)
 {
+	XMVECTOR P = XMLoadFloat3(&pos);
+	XMVECTOR T = XMLoadFloat3(&target);
+	XMVECTOR U = XMLoadFloat3(&up);
+
+	lookAt(P, T, U);
+
 }
 
 XMMATRIX camera::View() const

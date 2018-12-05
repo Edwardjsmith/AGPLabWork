@@ -12,6 +12,8 @@
 #include "camera.h"
 #include "text2D.h"
 
+#include "timer.h"
+
 //////////////////////////////////////////////////////////////////////////////////////
 //	Global Variables
 //////////////////////////////////////////////////////////////////////////////////////
@@ -35,6 +37,8 @@ ID3D11ShaderResourceView* g_pTexture0;
 ID3D11SamplerState* g_pSampler0;
 
 camera* Camera;
+
+timer* Timer;
 
 Text2D* g_2DText;
 
@@ -123,6 +127,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		}
 		else
 		{
+			Timer->tick();
 			// do something
 			RenderFrame();
 		}
@@ -138,7 +143,8 @@ HRESULT InitialiseGraphics()
 {
 	HRESULT hr = S_OK;
 	
-	Camera = new camera(0, 0, -1);
+	Camera = new camera(0, 0, -0.5);
+	Timer = new timer();
 
 	//Define vertices of a triangle - screen coordinates -1.0 to +1.0
 	POS_COL_TEX_NORM_VERTEX vertices[] =
@@ -348,21 +354,29 @@ void RenderFrame(void)
 
 	if (GetAsyncKeyState('W'))
 	{
-		Camera->walk(1.0f);
+		Camera->walk(1.0f * Timer->deltaTime());
 	}
 	if (GetAsyncKeyState('S'))
 	{
-		Camera->walk(-1.0f);
+		Camera->walk(-1.0f * Timer->deltaTime());
 	}
 	if (GetAsyncKeyState('A'))
 	{
-		Camera->strafe(-1.0f);
+		Camera->strafe(-1.0f * Timer->deltaTime());
 	}
 	if (GetAsyncKeyState('D'))
 	{
-		Camera->strafe(1.0f);
+		Camera->strafe(1.0f * Timer->deltaTime());
 	}
 
+	XMFLOAT3 target;
+
+	target.x = 0;
+	target.y = 0;
+	target.z = 0;
+
+
+	Camera->lookAt(Camera->getPos(), target, Camera->getUp());
 	Camera->updateViewMatrix();
 
 	//Set vertex buffer
@@ -377,10 +391,10 @@ void RenderFrame(void)
 	XMMATRIX projection, world, view;
 	view = Camera->View();
 	world = XMMatrixTranslation(0, 0, 15);
-	//projection = XMMatrixPerspectiveFovLH(XMConvertToRadians(45.0), 640.0 / 480.0, 1.0, 100.0);
+	projection = Camera->Proj();//XMMatrixPerspectiveFovLH(XMConvertToRadians(45.0), 640.0 / 480.0, 1.0, 100.0);
 	transpose = XMMatrixTranspose(world);
 
-	cb0_values.WorldViewProjection = world * view; //* projection;
+	cb0_values.WorldViewProjection = world * view * projection;
 	cb0_values.directional_light_colour = g_directional_light_colour;
 	cb0_values.ambient_light_colour = g_ambient_light_colour;
 	cb0_values.directional_light_vector = XMVector3Transform(g_directional_light_shines_from, transpose);
@@ -625,6 +639,12 @@ void ShutdownD3D()
 	{
 		delete g_2DText;
 		g_2DText = nullptr;
+	}
+
+	if (Timer)
+	{
+		delete Timer;
+		Timer = nullptr;
 	}
 
 
