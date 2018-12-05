@@ -15,12 +15,8 @@ camera::~camera()
 {
 }
 
-XMVECTOR camera::getPositionXM() const
-{
-	return XMLoadFloat3(&mPosition);
-}
 
-XMFLOAT3 camera::getPos() const
+XMVECTOR camera::getPos() const
 {
 	return mPosition;
 }
@@ -32,7 +28,7 @@ void camera::setPos(float x, float y, float z)
 	mPosition.z += z;
 }
 
-void camera::setPos(const XMFLOAT3 & value)
+void camera::setPos(const XMVECTOR & value)
 {
 	mPosition.x += value.x;
 	mPosition.y += value.y;
@@ -41,30 +37,30 @@ void camera::setPos(const XMFLOAT3 & value)
 
 XMVECTOR camera::getRightXM() const
 {
-	return XMLoadFloat3(&mRight);
+	return mRight;
 }
 
 XMVECTOR camera::getUpXM() const
 {
-	return XMLoadFloat3(&mUp);
+	return mUp;
 }
 
 XMVECTOR camera::getLookXM() const
 {
-	return XMLoadFloat3(&mLook);
+	return mLook;
 }
 
-XMFLOAT3 camera::getRight() const
+XMVECTOR camera::getRight() const
 {
 	return mRight;
 }
 
-XMFLOAT3 camera::getUp() const
+XMVECTOR camera::getUp() const
 {
 	return mUp;
 }
 
-XMFLOAT3 camera::getLook() const
+XMVECTOR camera::getLook() const
 {
 	return mLook;
 }
@@ -121,7 +117,7 @@ float camera::getfarWindowHeight() const
 	return mFarWindowHeight;
 }
 
-void camera::setLens(float fovY, float aspect, float zn, float zf)
+XMMATRIX camera::setLens(float fovY, float aspect, float zn, float zf)
 {
 	mFovY = fovY;
 	mAspect = aspect;
@@ -132,7 +128,9 @@ void camera::setLens(float fovY, float aspect, float zn, float zf)
 	mFarWindowHeight = 2.0f * mFarZ * tanf(0.5f * mFovY);
 
 	XMMATRIX P = XMMatrixPerspectiveFovLH(mFovY, mAspect, mNearZ, mFarZ);
-	XMStoreFloat4x4(&mProj, P);
+
+
+	return P;
 }
 
 void camera::lookAt(FXMVECTOR pos, FXMVECTOR target, FXMVECTOR worldUp)
@@ -165,7 +163,7 @@ XMMATRIX camera::View() const
 
 XMMATRIX camera::Proj() const
 {
-	XMMATRIX proj = XMLoadFloat4x4(&mProj);
+	XMMATRIX proj = XMMatrixLookAtLH(mPosition, mLook, mUp);
 	return proj;
 }
 

@@ -1,4 +1,4 @@
-﻿  main.cpp
+﻿  Model.cpp
 c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamath.h(2662): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
 c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamath.h(2663): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
 c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamath.h(2664): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
@@ -27,5 +27,7 @@ c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamath.h(2732)
 c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamath.h(2742): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
 c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamath.h(2743): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
 c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamath.h(2754): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
-c:\users\edwardsmith\documents\github\agplabwork\agp\main.cpp(394): warning C4305: 'argument': truncation from 'double' to 'FLOAT'
-  AGPLabs.vcxproj -> C:\Users\EdwardSmith\Documents\GitHub\AGPLabWork\AGP\x64\Debug\AGPLabs.exe
+u:\agplabwork\agp\model.cpp(76): warning C4715: 'Model::LoadShaders': not all control paths return a value
+u:\agplabwork\agp\model.cpp(25): warning C4715: 'Model::LoadObjModel': not all control paths return a value
+  LINK : U:\AGPLabWork\AGP\x64\Debug\AGPLabs.exe not found or not built by the last incremental link; performing full link
+  AGPLabs.vcxproj -> U:\AGPLabWork\AGP\x64\Debug\AGPLabs.exe

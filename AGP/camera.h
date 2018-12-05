@@ -11,11 +11,10 @@ public:
 	camera(float x, float y, float z);
 	~camera();
 
-	XMVECTOR getPositionXM() const; //Return camera pos
 	XMFLOAT3 getPos() const;
 
 	void setPos(float x, float y, float z);
-	void setPos(const XMFLOAT3& value);
+	void setPos(const XMVECTOR& value);
 
 
 	//Get basic camera vectors
@@ -23,9 +22,9 @@ public:
 	XMVECTOR getUpXM() const;
 	XMVECTOR getLookXM() const;
 
-	XMFLOAT3 getRight() const;
-	XMFLOAT3 getUp() const;
-	XMFLOAT3 getLook() const;
+	XMVECTOR getRight() const;
+	XMVECTOR getUp() const;
+	XMVECTOR getLook() const;
 
 	//Get frustum properties
 	float getNearZ() const;
@@ -42,7 +41,7 @@ public:
 	float getfarWindowHeight() const;
 	
 	//set frustum
-	void setLens(float fovY, float aspect, float zn, float zf);
+	XMMATRIX setLens(float fovY, float aspect, float zn, float zf);
 
 	//Define camera space via lookat
 	void lookAt(FXMVECTOR pos, FXMVECTOR target, FXMVECTOR worldUp);
@@ -64,10 +63,7 @@ public:
 	void updateViewMatrix();
 
 private:
-	XMFLOAT3 mPosition;
-	XMFLOAT3 mRight;
-	XMFLOAT3 mUp;
-	XMFLOAT3 mLook;
+	XMVECTOR mPosition, mRight, mUp, mLook;
 
 
 	//Cach frustum props
@@ -83,8 +79,8 @@ private:
 	float mFarWindowWidth;
 
 	//Cache view proj matrices
-	XMFLOAT4X4 mView;
-	XMFLOAT4X4 mProj;
+	XMVECTOR mView;
+	XMVECTOR mProj;
 
 };
 

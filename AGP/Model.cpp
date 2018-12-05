@@ -16,8 +16,8 @@ Model::~Model()
 
 HRESULT Model::LoadObjModel(const char * filename)
 {
-	HRESULT hr;
-	m_pObject = new ObjFileModel(filename, m_pD3DDevice, m_pImmediateContext);
+	HRESULT hr = NULL;
+	//m_pObject = new ObjFileModel(filename, m_pD3DDevice, m_pImmediateContext);
 
 	if (m_pObject->filename == "FILE NOT LOADED") return S_FALSE;
 
