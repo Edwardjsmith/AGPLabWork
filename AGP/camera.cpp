@@ -8,10 +8,10 @@ camera::camera(float x, float y, float z, float angle)
 	mAngle = angle;
 	mPosition = XMVectorSet(x, y, z, 0);
 
-	dx = sin(mAngle * (XM_PI / 180));
-	dz = cos(mAngle * (XM_PI / 180));
+	m_dx = sin(mAngle * (XM_PI / 180));
+	m_dz = cos(mAngle * (XM_PI / 180));
 
-	mLook = XMVectorSet(x + dx, y, z + dz, 0);
+	mLook = XMVectorSet(x + m_dx, y, z + m_dz, 0);
 	mUp = XMVectorSet(0, 1, 0, 0);
 
 	mView = XMMatrixLookAtLH(mPosition, mLook, mUp);
@@ -22,7 +22,7 @@ camera::~camera()
 }
 
 
-XMVECTOR camera::getPos() const
+XMVECTOR camera::getPos()
 {
 	return mPosition;
 }
@@ -54,17 +54,17 @@ XMVECTOR camera::getLookXM() const
 	return mLook;
 }
 
-XMVECTOR camera::getRight() const
+XMVECTOR camera::getRight()
 {
 	return mRight;
 }
 
-XMVECTOR camera::getUp() const
+XMVECTOR camera::getUp()
 {
 	return mUp;
 }
 
-XMVECTOR camera::getLook() const
+XMVECTOR camera::getLook()
 {
 	return mLook;
 }
@@ -141,12 +141,16 @@ void camera::lookAt(XMVECTOR pos, XMVECTOR target, XMVECTOR worldUp)
 	//mLook = mLook + pos;
 }
 	
-XMMATRIX camera::View() const
+XMMATRIX camera::View(XMVECTOR pos, XMVECTOR look, XMVECTOR up) 
 {
-	return mView;
+	mPosition = pos;
+	mLook = look;
+	mUp = up;
+
+	return mView = XMMatrixLookAtLH(mPosition, mLook, mUp);
 }
 
-XMMATRIX camera::Proj(float FovY, float aspect, float nearZ, float farZ) const
+XMMATRIX camera::Proj(float FovY, float aspect, float nearZ, float farZ)
 {
 	return XMMatrixPerspectiveFovLH(mFovY, mAspect, mNearZ, mFarZ);
 }

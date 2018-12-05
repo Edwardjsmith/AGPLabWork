@@ -12,7 +12,7 @@ public:
 	camera(float x, float y, float z, float angle);
 	~camera();
 
-	XMVECTOR getPos() const;
+	XMVECTOR getPos();
 
 	void setPos(float x, float y, float z);
 	void setPos(const XMVECTOR& value);
@@ -23,9 +23,9 @@ public:
 	XMVECTOR getUpXM() const;
 	XMVECTOR getLookXM() const;
 
-	XMVECTOR getRight() const;
-	XMVECTOR getUp() const;
-	XMVECTOR getLook() const;
+	XMVECTOR getRight();
+	XMVECTOR getUp();
+	XMVECTOR getLook();
 
 	//Get frustum properties
 	float getNearZ() const;
@@ -49,8 +49,8 @@ public:
 
 
 	//View/proj matrices
-	XMMATRIX View() const;
-	XMMATRIX Proj(float FovY, float aspect, float nearZ, float farZ) const;
+	XMMATRIX View(XMVECTOR pos, XMVECTOR look, XMVECTOR up);
+	XMMATRIX Proj(float FovY, float aspect, float nearZ, float farZ);
 
 	//Strafe and walk
 	void strafe(float direction);
@@ -63,7 +63,7 @@ public:
 private:
 	XMVECTOR mPosition, mRight, mUp, mLook, mRotation;
 	float mAngle;
-	float dx, dy, dz;
+	float m_dx, m_dy, m_dz;
 
 
 	//Cach frustum props

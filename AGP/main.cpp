@@ -393,7 +393,7 @@ void RenderFrame(void)
 	cb0_values.RedAmount = 0.5f; //50 % of vertex shader value
 
 	XMMATRIX projection, world, view;
-	view = Camera->View();
+	view = Camera->View(Camera->getPos(), Camera->getLook(), Camera->getUp());
 	world = XMMatrixTranslation(0, 0, 15);
 	projection = Camera->setLens(XMConvertToRadians(45.0), 640.0 / 480.0, 1.0, 100.0);
 	transpose = XMMatrixTranspose(world);
