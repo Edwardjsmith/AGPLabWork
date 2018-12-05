@@ -23,12 +23,12 @@ struct VOut
 VOut VShader(float4 position : POSITION, float4 color : COLOR, float3 normal : NORMAL, float2 texcoord : TEXCOORD)
 {
 	VOut output;
-	//color.r *= red_fraction;
+	color.r *= red_fraction;
 	output.position = mul(WVPMatrix, position);
 	float diffuse_amount = dot(directional_light_vector, normal);
 	diffuse_amount = saturate(diffuse_amount);
 	output.color = ambient_light_colour + (directional_light_colour * diffuse_amount);
-	//output.color = color;
+	output.color = color;
 	output.texcoord = texcoord;
 
 	return output;

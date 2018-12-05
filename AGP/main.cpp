@@ -11,6 +11,7 @@
 
 #include "camera.h"
 #include "text2D.h"
+#include "objfilemodel.h"
 
 #include "timer.h"
 
@@ -41,6 +42,9 @@ camera* Camera;
 timer* Timer;
 
 Text2D* g_2DText;
+
+ObjFileModel* pObject;
+
 
 XMVECTOR g_directional_light_shines_from;
 XMVECTOR g_directional_light_colour;
@@ -145,6 +149,7 @@ HRESULT InitialiseGraphics()
 	
 	Camera = new camera(0, 0, -0.5);
 	Timer = new timer();
+	
 
 	//Define vertices of a triangle - screen coordinates -1.0 to +1.0
 	POS_COL_TEX_NORM_VERTEX vertices[] =
@@ -332,6 +337,12 @@ HRESULT InitialiseGraphics()
 	}
 
 	g_pImmediateContext->IASetInputLayout(g_pInputLayout);
+
+	pObject = new ObjFileModel("cube", g_pD3DDevice, g_pImmediateContext);
+	if (pObject->filename == "FILE NOT LOADED")
+	{
+		return S_FALSE;
+	}
 
 	return S_OK;
 }
