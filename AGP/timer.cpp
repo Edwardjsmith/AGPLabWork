@@ -17,9 +17,6 @@ timer::timer()
 
 	QueryPerformanceFrequency((LARGE_INTEGER*)&countsPerSec);
 	mSecondsPerCount = 1.0 / (double)countsPerSec;
-
-
-
 }
 
 

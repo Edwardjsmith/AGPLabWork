@@ -7,6 +7,7 @@ public:
 	~Model();
 
 	HRESULT LoadObjModel(const char* filename);
+	HRESULT LoadShaders(HRESULT hr);
 
 private:
 	ID3D11Device*		m_pD3DDevice;

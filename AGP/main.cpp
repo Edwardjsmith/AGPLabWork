@@ -43,8 +43,6 @@ timer* Timer;
 
 Text2D* g_2DText;
 
-ObjFileModel* pObject;
-
 
 XMVECTOR g_directional_light_shines_from;
 XMVECTOR g_directional_light_colour;
@@ -337,12 +335,6 @@ HRESULT InitialiseGraphics()
 	}
 
 	g_pImmediateContext->IASetInputLayout(g_pInputLayout);
-
-	pObject = new ObjFileModel("cube", g_pD3DDevice, g_pImmediateContext);
-	if (pObject->filename == "FILE NOT LOADED")
-	{
-		return S_FALSE;
-	}
 
 	return S_OK;
 }
