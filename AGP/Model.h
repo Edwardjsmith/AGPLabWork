@@ -7,7 +7,30 @@ public:
 	~Model();
 
 	HRESULT LoadObjModel(const char* filename);
-	HRESULT LoadShaders(HRESULT hr);
+	void Draw(XMMATRIX* view, XMMATRIX* projection);
+
+	void setPosition(float x, float y, float z);
+
+	void setX(float x);
+	float getX();
+
+	void setY(float y);
+	float getY();
+
+	void setZ(float z);
+	float getZ();
+
+	void setScale(float value);
+	float getScale();
+
+	void setXRotation(float value);
+	float getXRotation();
+
+	void setYRotation(float value);
+	float getYRotation();
+
+	void setZRotation(float value);
+	float getZRotation();
 
 private:
 	ID3D11Device*		m_pD3DDevice;

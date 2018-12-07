@@ -20,7 +20,7 @@ struct VOut
 	float2 texcoord : TEXCOORD;
 };
 
-VOut VShader(float4 position : POSITION, float4 color : COLOR, float3 normal : NORMAL, float2 texcoord : TEXCOORD)
+VOut VShader(float4 position : POSITION, float4 color : COLOR, float2 texcoord : TEXCOORD, float3 normal : NORMAL)
 {
 	VOut output;
 	color.r *= red_fraction;

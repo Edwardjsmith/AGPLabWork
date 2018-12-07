@@ -13,7 +13,7 @@
 
 #include "camera.h"
 #include "text2D.h"
-#include "objfilemodel.h"
+#include "Model.h"
 
 #include "timer.h"
 
@@ -49,7 +49,7 @@ Camera* camera;
 timer* Timer;
 
 Text2D* g_2DText;
-
+Model* g_model;
 
 XMVECTOR g_directional_light_shines_from;
 XMVECTOR g_directional_light_colour;
@@ -152,7 +152,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 HRESULT InitialiseGraphics()
 {
 	HRESULT hr = S_OK;
-
+	g_model = new Model(g_pD3DDevice, g_pImmediateContext);
+	g_model->LoadObjModel((char*)"assets/cube.obj");
 	//Define vertices of a triangle - screen coordinates -1.0 to +1.0
 	POS_COL_TEX_NORM_VERTEX vertices[] =
 	{
@@ -301,6 +302,11 @@ HRESULT InitialiseGraphics()
 
 	D3DX11CreateShaderResourceViewFromFile(g_pD3DDevice, "assets/texture.bmp", NULL, NULL, &g_pTexture0, NULL);
 
+	if (g_pTexture0 = NULL)
+	{
+		DXTRACE_MSG("Failed to load texture");
+	}
+
 	
 
 	//Create and set the input layout object
@@ -311,7 +317,7 @@ HRESULT InitialiseGraphics()
 		//NOTE the spelling of COLOR. Again, be careful setting the correct dxgi format (using A32) and correct D3D version
 		{"COLOR", 0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0},
 	    {"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}
 	};
 
 
@@ -340,6 +346,8 @@ HRESULT InitialiseGraphics()
 
 	g_pImmediateContext->IASetInputLayout(g_pInputLayout);
 	camera = new Camera(0, 0, -0.5, 0, 0);
+	g_model->setPosition(0, 0, 15);
+	
 	return S_OK;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -349,20 +357,17 @@ HRESULT InitialiseGraphics()
 void RenderFrame(void)
 {
 	// RENDER HERE
-	
+	//g_pImmediateContext->ClearRenderTargetView(g_pBackBufferRTView, gClearColour);
+	//g_pImmediateContext->ClearDepthStencilView(g_pZBuffer, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-	g_pImmediateContext->ClearRenderTargetView(g_pBackBufferRTView, gClearColour);
-
-	g_pImmediateContext->ClearDepthStencilView(g_pZBuffer, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-
-	g_directional_light_shines_from = XMVectorSet(0.0f, 0.0f, -1.0f, 0.0f);
+	/*g_directional_light_shines_from = XMVectorSet(0.0f, 0.0f, -1.0f, 0.0f);
 	g_directional_light_colour = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 	g_ambient_light_colour = XMVectorSet(0.1f, 0.1f, 0.1f, 1.0f);
 	//Select which primitive type to use
 	g_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	
 
-	XMMATRIX rotation = XMMatrixRotationY(0);
+	//XMMATRIX rotation = XMMatrixRotationY(0);
 
 	//Set vertex buffer
 	UINT stride = sizeof(POS_COL_TEX_NORM_VERTEX);
@@ -393,7 +398,7 @@ void RenderFrame(void)
 	g_pImmediateContext->UpdateSubresource(g_pConstantBuffer0, 0, 0, &cb0_values, 0, 0);
 	g_pImmediateContext->VSSetConstantBuffers(0, 1, &g_pConstantBuffer0);
 
-	
+	g_model->Draw(&view, &projection);
 	g_pImmediateContext->PSSetSamplers(0, 1, &g_pSampler0);
 	g_pImmediateContext->PSSetShaderResources(0, 1, &g_pTexture0);
 
@@ -403,14 +408,26 @@ void RenderFrame(void)
 	g_pImmediateContext->IASetInputLayout(g_pInputLayout);
 
 
-	//Draw the vertex buffer to the back buffer
-	g_pImmediateContext->Draw(36, 0);
-
+	//Draw the vertex buffer to the back buffer*/
+	//g_pImmediateContext->Draw(36, 0);
+	
 	//
+	//g_2DText->AddText("Hello!", -1.0f, 1.0f, 0.2f);
+	//g_2DText->RenderText();
+
+	g_pImmediateContext->ClearRenderTargetView(g_pBackBufferRTView, gClearColour);
+	g_pImmediateContext->ClearDepthStencilView(g_pZBuffer, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+	XMMATRIX projection, view;
+	view = camera->GetViewMatrix();// Camera->View(Camera->getPos(), Camera->getLook(), Camera->getUp());
+	projection = XMMatrixPerspectiveFovLH(XMConvertToRadians(45.0), 640 / 480, 1.0, 100.0);
+
+	g_pImmediateContext->PSSetSamplers(0, 1, &g_pSampler0);
+	g_pImmediateContext->PSSetShaderResources(0, 1, &g_pTexture0);
+
+	g_model->Draw(&view, &projection);
 	g_2DText->AddText("Hello!", -1.0f, 1.0f, 0.2f);
 	g_2DText->RenderText();
-
-	
 
 	// Display what has just been rendered
 	g_pSwapChain->Present(0, 0);
@@ -654,6 +671,7 @@ void ShutdownD3D()
 	if (g_2DText)delete g_2DText;
 	if (Timer)delete Timer;
 	if (camera)delete camera;
+	if (g_model)delete g_model;
 }
 
 
