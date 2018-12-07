@@ -152,8 +152,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 HRESULT InitialiseGraphics()
 {
 	HRESULT hr = S_OK;
+
+	camera = new Camera(0, 0, -0.5, 0, 0);
 	g_model = new Model(g_pD3DDevice, g_pImmediateContext);
 	g_model->LoadObjModel((char*)"assets/cube.obj");
+	g_model->setPosition(0, 0, 15);
+	//g_model->setPosition(0, 0, 15);
 	//Define vertices of a triangle - screen coordinates -1.0 to +1.0
 	POS_COL_TEX_NORM_VERTEX vertices[] =
 	{
@@ -345,8 +349,7 @@ HRESULT InitialiseGraphics()
 	}
 
 	g_pImmediateContext->IASetInputLayout(g_pInputLayout);
-	camera = new Camera(0, 0, -0.5, 0, 0);
-	g_model->setPosition(0, 0, 15);
+
 	
 	return S_OK;
 }
@@ -357,10 +360,10 @@ HRESULT InitialiseGraphics()
 void RenderFrame(void)
 {
 	// RENDER HERE
-	//g_pImmediateContext->ClearRenderTargetView(g_pBackBufferRTView, gClearColour);
-	//g_pImmediateContext->ClearDepthStencilView(g_pZBuffer, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	/*g_pImmediateContext->ClearRenderTargetView(g_pBackBufferRTView, gClearColour);
+	g_pImmediateContext->ClearDepthStencilView(g_pZBuffer, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-	/*g_directional_light_shines_from = XMVectorSet(0.0f, 0.0f, -1.0f, 0.0f);
+	g_directional_light_shines_from = XMVectorSet(0.0f, 0.0f, -1.0f, 0.0f);
 	g_directional_light_colour = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 	g_ambient_light_colour = XMVectorSet(0.1f, 0.1f, 0.1f, 1.0f);
 	//Select which primitive type to use
@@ -408,12 +411,12 @@ void RenderFrame(void)
 	g_pImmediateContext->IASetInputLayout(g_pInputLayout);
 
 
-	//Draw the vertex buffer to the back buffer*/
-	//g_pImmediateContext->Draw(36, 0);
+	//Draw the vertex buffer to the back buffer
+	g_pImmediateContext->Draw(36, 0);
 	
 	//
-	//g_2DText->AddText("Hello!", -1.0f, 1.0f, 0.2f);
-	//g_2DText->RenderText();
+	g_2DText->AddText("Hello!", -1.0f, 1.0f, 0.2f);
+	g_2DText->RenderText();*/
 
 	g_pImmediateContext->ClearRenderTargetView(g_pBackBufferRTView, gClearColour);
 	g_pImmediateContext->ClearDepthStencilView(g_pZBuffer, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
@@ -426,6 +429,7 @@ void RenderFrame(void)
 	g_pImmediateContext->PSSetShaderResources(0, 1, &g_pTexture0);
 
 	g_model->Draw(&view, &projection);
+
 	g_2DText->AddText("Hello!", -1.0f, 1.0f, 0.2f);
 	g_2DText->RenderText();
 

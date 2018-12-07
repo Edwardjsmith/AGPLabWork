@@ -9,15 +9,20 @@ Model::Model(ID3D11Device * device, ID3D11DeviceContext * context)
 {
 	m_pD3DDevice = device;
 	m_pImmediateContext = context;
-
-	m_x = m_y = 0.0f;
-	m_z = 15.0f;
+	m_x = m_y = m_z = 0.0f;
 	m_xAngle = m_yAngle = m_zAngle = 0.0f;
 	m_scale = 1.0f;
 }
 
 Model::~Model()
 {
+	if (m_pConstantBuffer) m_pD3DDevice->Release();
+	if (m_pImmediateContext) m_pImmediateContext->Release();
+	if (m_pPShader) m_pPShader->Release();
+	if (m_pVShader) m_pVShader->Release();
+	if (m_pObject) delete m_pObject;
+	if (m_pInputLayout) m_pInputLayout->Release();
+
 }
 
 HRESULT Model::LoadObjModel(const char * filename)
@@ -29,19 +34,6 @@ HRESULT Model::LoadObjModel(const char * filename)
 
 	ID3DBlob *VS, *PS, *error;
 
-	hr = D3DX11CompileFromFile("model_shaders.hlsl", 0, 0, "ModelPS", "ps_4_0", 0, 0, 0, &PS, &error, 0);
-
-	if (error != 0)//Check for shader compilation error
-	{
-		OutputDebugStringA((char*)error->GetBufferPointer());
-		error->Release();
-		if (FAILED(hr))//Don't fail if error is just a warning
-		{
-			DXTRACE_MSG("Failed model PS");
-			return hr;
-		}
-	}
-
 	hr = D3DX11CompileFromFile("model_shaders.hlsl", 0, 0, "ModelVS", "vs_4_0", 0, 0, 0, &VS, &error, 0);
 
 	if (error != 0)//Check for shader compilation error
@@ -51,6 +43,19 @@ HRESULT Model::LoadObjModel(const char * filename)
 		if (FAILED(hr))//Don't fail if error is just a warning
 		{
 			DXTRACE_MSG("Failed model VS");
+			return hr;
+		}
+	}
+
+	hr = D3DX11CompileFromFile("model_shaders.hlsl", 0, 0, "ModelPS", "ps_4_0", 0, 0, 0, &PS, &error, 0);
+
+	if (error != 0)//Check for shader compilation error
+	{
+		OutputDebugStringA((char*)error->GetBufferPointer());
+		error->Release();
+		if (FAILED(hr))//Don't fail if error is just a warning
+		{
+			DXTRACE_MSG("Failed model PS");
 			return hr;
 		}
 	}
@@ -70,21 +75,8 @@ HRESULT Model::LoadObjModel(const char * filename)
 		return hr;
 	}
 
-	//Set up Const buffer
-	D3D11_BUFFER_DESC constant_buffer_desc;
-	ZeroMemory(&constant_buffer_desc, sizeof(constant_buffer_desc));
-
-	constant_buffer_desc.Usage = D3D11_USAGE_DEFAULT; //Can use Update subresource to update
-	constant_buffer_desc.ByteWidth = 128; //Set size, must be multiple of 16;
-	constant_buffer_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER; //Use as const buffer
-
-	hr = m_pD3DDevice->CreateBuffer(&constant_buffer_desc, NULL, &m_pConstantBuffer);
-
-	if (FAILED(hr))//Return an error code if failed
-	{
-		DXTRACE_MSG("Failed model const buffer");
-		return hr;
-	}
+	m_pImmediateContext->VSSetShader(m_pVShader, 0, 0);
+	m_pImmediateContext->PSSetShader(m_pPShader, 0, 0);
 
 	//Create and set the input layout object
 	D3D11_INPUT_ELEMENT_DESC iedesc[] =
@@ -99,10 +91,27 @@ HRESULT Model::LoadObjModel(const char * filename)
 	hr = m_pD3DDevice->CreateInputLayout(iedesc, ARRAYSIZE(iedesc), VS->GetBufferPointer(), VS->GetBufferSize(), &m_pInputLayout);
 	if (FAILED(hr))
 	{
-		DXTRACE_MSG("Failed to create input layer");
+		DXTRACE_MSG("Failed to create model input layer");
 		return hr;
 	}
 
+	m_pImmediateContext->IASetInputLayout(m_pInputLayout);
+
+	//Set up Const buffer
+	D3D11_BUFFER_DESC constant_buffer_desc;
+	ZeroMemory(&constant_buffer_desc, sizeof(constant_buffer_desc));
+
+	constant_buffer_desc.Usage = D3D11_USAGE_DEFAULT; //Can use Update subresource to update
+	constant_buffer_desc.ByteWidth = 64; //Set size, must be multiple of 16;
+	constant_buffer_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER; //Use as const buffer
+
+	hr = m_pD3DDevice->CreateBuffer(&constant_buffer_desc, NULL, &m_pConstantBuffer);
+
+	if (FAILED(hr))//Return an error code if failed
+	{
+		DXTRACE_MSG("Failed model const buffer");
+		return hr;
+	}
 
 	return S_OK;
 }
@@ -120,12 +129,14 @@ void Model::Draw(XMMATRIX* view, XMMATRIX* projection)
 	MODEL_CONSTANT_BUFFER model_cb_values;
 	model_cb_values.WorldViewProjection = world * (*view) * (*projection);
 
-	m_pImmediateContext->UpdateSubresource(m_pConstantBuffer, 0, 0, &model_cb_values, 0, 0);
 	m_pImmediateContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
+	m_pImmediateContext->UpdateSubresource(m_pConstantBuffer, 0, 0, &model_cb_values, 0, 0);
 
 	m_pImmediateContext->VSSetShader(m_pVShader, 0, 0);
 	m_pImmediateContext->PSSetShader(m_pPShader, 0, 0);
 	m_pImmediateContext->IASetInputLayout(m_pInputLayout);
+
+	m_pObject->Draw();
 }
 
 void Model::setPosition(float x, float y, float z)

@@ -33,7 +33,7 @@ public:
 	float getZRotation();
 
 private:
-	ID3D11Device*		m_pD3DDevice;
+	ID3D11Device*			m_pD3DDevice;
 	ID3D11DeviceContext*	m_pImmediateContext;
 
 	ObjFileModel*		m_pObject;
