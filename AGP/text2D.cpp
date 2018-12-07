@@ -208,19 +208,19 @@ void Text2D::RenderText(void)
 	pImmediateContext->Map(pVertexBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);	// Lock the buffer to allow writing
 	memcpy(ms.pData, vertices, sizeof(vertices[0])*current_char*6);						// Copy the data -  only upload those that are used
 	pImmediateContext->Unmap(pVertexBuffer, NULL);	
-
+	
 	// set all rendering states
 	pImmediateContext->PSSetSamplers(0, 1, &pSampler);
 	pImmediateContext->PSSetShaderResources(0, 1, &pTexture);
 	pImmediateContext->VSSetShader(pVShader, 0, 0);
 	pImmediateContext->PSSetShader(pPShader, 0, 0);
 	pImmediateContext->IASetInputLayout(pInputLayout);
-
+	
 	UINT stride = sizeof(POS_TEX_VERTEX);
 	UINT offset = 0;
 	pImmediateContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &stride, &offset);
 	pImmediateContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
-
+	
 	// turn off Z buffer so text always on top
 	pImmediateContext->OMSetDepthStencilState(pDepthDisabledStencilState, 1);
 
@@ -229,6 +229,7 @@ void Text2D::RenderText(void)
 
 	// turn on Z buffer so other rendering can use it
 	pImmediateContext->OMSetDepthStencilState(pDepthEnabledStencilState, 1);
+	
 }
 
 

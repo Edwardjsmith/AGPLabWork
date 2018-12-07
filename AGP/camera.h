@@ -1,86 +1,29 @@
 #pragma once
-#include <d3d11.h>
-#define _XM_NO_INTRINSICS_
-#define XM_NO_ALIGNMENT
-#include<xnamath.h>
 
 
-class camera
+#include "d3d11.h"
+
+#include "xnamath.h"
+#include "math.h"
+
+
+
+class Camera
 {
 public:
 
-	camera(float x, float y, float z, float angle);
-	~camera();
-
-	XMVECTOR getPos();
-
-	void setPos(float x, float y, float z);
-	void setPos(const XMVECTOR& value);
-
-
-	//Get basic camera vectors
-	XMVECTOR getRightXM() const;
-	XMVECTOR getUpXM() const;
-	XMVECTOR getLookXM() const;
-
-	XMVECTOR getRight();
-	XMVECTOR getUp();
-	XMVECTOR getLook();
-
-	//Get frustum properties
-	float getNearZ() const;
-	float getFarZ() const;
-	float getAspect() const;
-	float getFOVY() const;
-	float getFOVX() const;
-	float getFOVZ() const;
-
-	//get near and far plane dimensions in view space coords
-	float getnearWindowWidth() const;
-	float getnearWindowHeight() const;
-	float getfarWindowWidth() const;
-	float getfarWindowHeight() const;
-	
-	//set frustum
-	XMMATRIX setLens(float fovY, float aspect, float zn, float zf);
-
-	//Define camera space via lookat
-	void lookAt(XMVECTOR pos, XMVECTOR target, XMVECTOR worldUp);
-
-
-	//View/proj matrices
-	XMMATRIX View(XMVECTOR pos, XMVECTOR look, XMVECTOR up);
-	XMMATRIX Proj(float FovY, float aspect, float nearZ, float farZ);
-
-	//Strafe and walk
-	void strafe(float direction);
-	void walk(float direction);
-
-	//Rotate cam
-	void Pitch(float angle);
-	void RotateY(float angle);
+	Camera(float x, float y, float z, float c_rot, float pitch);
+	void Rotate(float deg_change);
+	void Pitch(float deg_change);
+	void Forward(float movement);
+	void Up(float movement);
+	void Strafe(float distance);
+	XMMATRIX GetViewMatrix();
+	~Camera();
 
 private:
-	XMVECTOR mPosition, mRight, mUp, mLook, mRotation;
-	float mAngle;
-	float m_dx, m_dy, m_dz;
-
-
-	//Cach frustum props
-	float mNearZ;
-	float mFarZ;
-	float mAspect;
-	float mFovY;
-	float mFovX;
-	float mFovZ;
-	float mNearWindowHeight;
-	float mFarWindowHeight;
-	float mNearWindowWidth;
-	float mFarWindowWidth;
-
-	//Cache view proj matrices
-	XMMATRIX mView;
-	XMMATRIX mProj;
-
+	float m_x, m_y, m_z, m_dx, m_dy, m_dz, m_camera_rotation, m_camera_pitch, m_ax, m_az;
+	XMVECTOR m_position, m_lookat, m_up;
 };
+
 

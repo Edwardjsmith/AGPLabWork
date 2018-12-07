@@ -1,12 +1,14 @@
 //The #include order is important
+#define W_key  0x57
+#define A_key  0x41
+#define S_key  0x53
+#define D_key  0x44
+
 #include <d3d11.h>
 #include <dxgi.h>
 #include <d3dx11.h>
 #include <windows.h>
 #include <dxerr.h>
-
-#define _XM_NO_INTRINSICS_
-#define XM_NO_ALIGNMENT
 #include <xnamath.h>
 
 #include "camera.h"
@@ -14,6 +16,11 @@
 #include "objfilemodel.h"
 
 #include "timer.h"
+
+
+#define _XM_NO_INTRINSICS_
+#define XM_NO_ALIGNMENT
+
 
 //////////////////////////////////////////////////////////////////////////////////////
 //	Global Variables
@@ -37,7 +44,7 @@ ID3D11DepthStencilView* g_pZBuffer;
 ID3D11ShaderResourceView* g_pTexture0;
 ID3D11SamplerState* g_pSampler0;
 
-camera* Camera;
+Camera* camera;
 
 timer* Timer;
 
@@ -145,7 +152,7 @@ HRESULT InitialiseGraphics()
 {
 	HRESULT hr = S_OK;
 	
-	Camera = new camera(0, 0, -0.5, 0);
+	
 	Timer = new timer();
 	
 
@@ -335,7 +342,7 @@ HRESULT InitialiseGraphics()
 	}
 
 	g_pImmediateContext->IASetInputLayout(g_pInputLayout);
-
+	camera = new Camera(0, 0, -0.5, 0, 0);
 	return S_OK;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -345,6 +352,7 @@ HRESULT InitialiseGraphics()
 void RenderFrame(void)
 {
 	// RENDER HERE
+	
 
 	g_pImmediateContext->ClearRenderTargetView(g_pBackBufferRTView, gClearColour);
 
@@ -353,31 +361,28 @@ void RenderFrame(void)
 	g_directional_light_shines_from = XMVectorSet(0.0f, 0.0f, -1.0f, 0.0f);
 	g_directional_light_colour = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 	g_ambient_light_colour = XMVectorSet(0.1f, 0.1f, 0.1f, 1.0f);
-
-
+	//Select which primitive type to use
+	g_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	
+	/*
 	if (GetAsyncKeyState('W'))
 	{
-		Camera->walk(1.0f * Timer->deltaTime());
+		camera->Forward(1);
 	}
 	if (GetAsyncKeyState('S'))
 	{
-		Camera->walk(-1.0f * Timer->deltaTime());
+		camera->Forward(-1);
 	}
 	if (GetAsyncKeyState('A'))
 	{
-		Camera->strafe(-1.0f * Timer->deltaTime());
+		camera->Strafe(-1);
 	}
 	if (GetAsyncKeyState('D'))
 	{
-		Camera->strafe(1.0f * Timer->deltaTime());
+		camera->Strafe(1);
 	}
-
-	XMVECTOR target;
-
-	target.x = 0;
-	target.y = 0;
-	target.z = 0;
-	target.w = 0;
+	*/
+	
 
 	XMMATRIX rotation = XMMatrixRotationY(0);
 
@@ -393,9 +398,13 @@ void RenderFrame(void)
 	cb0_values.RedAmount = 0.5f; //50 % of vertex shader value
 
 	XMMATRIX projection, world, view;
-	view = Camera->View(Camera->getPos(), Camera->getLook(), Camera->getUp());
-	world = XMMatrixTranslation(0, 0, 15);
-	projection = Camera->setLens(XMConvertToRadians(45.0), 640.0 / 480.0, 1.0, 100.0);
+	view = camera->GetViewMatrix();// Camera->View(Camera->getPos(), Camera->getLook(), Camera->getUp());
+	world = XMMatrixRotationX(XMConvertToRadians(0));
+	world *= XMMatrixRotationY(XMConvertToRadians(0));
+	world *= XMMatrixRotationZ(XMConvertToRadians(0));
+	world *= XMMatrixTranslation(0, 0, 15);
+
+	projection = XMMatrixPerspectiveFovLH(XMConvertToRadians(45.0), 640 / 480, 1.0, 100.0);
 	transpose = XMMatrixTranspose(world);
 
 	cb0_values.WorldViewProjection = world * view * projection;
@@ -409,18 +418,22 @@ void RenderFrame(void)
 	g_pImmediateContext->UpdateSubresource(g_pConstantBuffer0, 0, 0, &cb0_values, 0, 0);
 	g_pImmediateContext->VSSetConstantBuffers(0, 1, &g_pConstantBuffer0);
 
-	//Select which primitive type to use
-	g_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
+	
 	g_pImmediateContext->PSSetSamplers(0, 1, &g_pSampler0);
 	g_pImmediateContext->PSSetShaderResources(0, 1, &g_pTexture0);
+
+	g_pImmediateContext->VSSetShader(g_pVertexShader, 0, 0);
+	g_pImmediateContext->PSSetShader(g_pPixelShader, 0, 0);
+
+	g_pImmediateContext->IASetInputLayout(g_pInputLayout);
+
 
 	//Draw the vertex buffer to the back buffer
 	g_pImmediateContext->Draw(36, 0);
 
-	g_2DText->RenderText();
+	//
 	g_2DText->AddText("Hello!", -1.0f, 1.0f, 0.2f);
-
+	g_2DText->RenderText();
 
 	
 
@@ -486,6 +499,32 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_KEYDOWN:
 		if (wParam == VK_ESCAPE)
 			DestroyWindow(g_hWnd);
+		if (wParam == VK_UP) {
+			camera->Forward(1);
+		}
+		if (wParam == VK_DOWN) {
+			camera->Forward(-1);
+		}
+		if (wParam == A_key) {
+			camera->Rotate(1);
+		}
+		if (wParam == D_key) {
+			camera->Rotate(-1);
+		}
+		if (wParam == W_key) {
+			camera->Pitch(1);
+		}
+		if (wParam == S_key) {
+			camera->Pitch(-1);
+		}
+		if (wParam == VK_LEFT) {
+			camera->Strafe(-1);
+
+		}
+		if (wParam == VK_RIGHT) {
+			camera->Strafe(1);
+
+		}
 		return 0;
 
 	default:
@@ -634,27 +673,12 @@ void ShutdownD3D()
 	if (g_pD3DDevice) g_pD3DDevice->Release();
 	if (g_pBackBufferRTView) g_pBackBufferRTView->Release();
 	if (g_pD3DDevice) g_pD3DDevice->Release();
-	if (Camera)
-	{
-		delete Camera;
-		Camera = nullptr;
-	}
-
+	
 	if (g_pTexture0) g_pTexture0->Release();
 	if (g_pSampler0) g_pSampler0->Release();
-	if (g_2DText) 
-	{
-		delete g_2DText;
-		g_2DText = nullptr;
-	}
-
-	if (Timer)
-	{
-		delete Timer;
-		Timer = nullptr;
-	}
-
-
+	if (g_2DText)delete g_2DText;
+	if (Timer)delete Timer;
+	if (camera)delete camera;
 }
 
 
