@@ -127,6 +127,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	// Main message loop
 	MSG msg = { 0 };
 
+	Timer = new timer();
 	while (msg.message != WM_QUIT)
 	{
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -151,10 +152,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 HRESULT InitialiseGraphics()
 {
 	HRESULT hr = S_OK;
-	
-	
-	Timer = new timer();
-	
 
 	//Define vertices of a triangle - screen coordinates -1.0 to +1.0
 	POS_COL_TEX_NORM_VERTEX vertices[] =
@@ -364,29 +361,8 @@ void RenderFrame(void)
 	//Select which primitive type to use
 	g_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	
-	/*
-	if (GetAsyncKeyState('W'))
-	{
-		camera->Forward(1);
-	}
-	if (GetAsyncKeyState('S'))
-	{
-		camera->Forward(-1);
-	}
-	if (GetAsyncKeyState('A'))
-	{
-		camera->Strafe(-1);
-	}
-	if (GetAsyncKeyState('D'))
-	{
-		camera->Strafe(1);
-	}
-	*/
-	
 
 	XMMATRIX rotation = XMMatrixRotationY(0);
-
-	//Camera->updateViewMatrix();
 
 	//Set vertex buffer
 	UINT stride = sizeof(POS_COL_TEX_NORM_VERTEX);
@@ -398,8 +374,6 @@ void RenderFrame(void)
 	cb0_values.RedAmount = 0.5f; //50 % of vertex shader value
 
 	XMMATRIX projection, world, view;
-<<<<<<< HEAD
-<<<<<<< HEAD
 	view = camera->GetViewMatrix();// Camera->View(Camera->getPos(), Camera->getLook(), Camera->getUp());
 	world = XMMatrixRotationX(XMConvertToRadians(0));
 	world *= XMMatrixRotationY(XMConvertToRadians(0));
@@ -407,14 +381,6 @@ void RenderFrame(void)
 	world *= XMMatrixTranslation(0, 0, 15);
 
 	projection = XMMatrixPerspectiveFovLH(XMConvertToRadians(45.0), 640 / 480, 1.0, 100.0);
-=======
-=======
->>>>>>> parent of b87047e... Backup
-	view = Camera->View();
-	world = XMMatrixTranslation(0, 0, 15);
-	projection = Camera->setLens(XMConvertToRadians(45.0), 640.0 / 480.0, 1.0, 100.0);
->>>>>>> parent of b87047e... Backup
-	transpose = XMMatrixTranspose(world);
 
 	cb0_values.WorldViewProjection = world * view * projection;
 	cb0_values.directional_light_colour = g_directional_light_colour;
@@ -509,29 +475,29 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		if (wParam == VK_ESCAPE)
 			DestroyWindow(g_hWnd);
 		if (wParam == VK_UP) {
-			camera->Forward(1);
+			camera->Forward(1000 * Timer->deltaTime());
 		}
 		if (wParam == VK_DOWN) {
-			camera->Forward(-1);
+			camera->Forward(-1000 * Timer->deltaTime());
 		}
 		if (wParam == A_key) {
-			camera->Rotate(1);
+			camera->Rotate(1000 * Timer->deltaTime());
 		}
 		if (wParam == D_key) {
-			camera->Rotate(-1);
+			camera->Rotate(-1000* Timer->deltaTime());
 		}
 		if (wParam == W_key) {
-			camera->Pitch(1);
+			camera->Pitch(1000 * Timer->deltaTime());
 		}
 		if (wParam == S_key) {
-			camera->Pitch(-1);
+			camera->Pitch(-1000 * Timer->deltaTime());
 		}
 		if (wParam == VK_LEFT) {
-			camera->Strafe(-1);
+			camera->Strafe(-1000 * Timer->deltaTime());
 
 		}
 		if (wParam == VK_RIGHT) {
-			camera->Strafe(1);
+			camera->Strafe(1000 * Timer->deltaTime());
 
 		}
 		return 0;
