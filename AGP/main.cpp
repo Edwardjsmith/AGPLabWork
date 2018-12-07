@@ -398,6 +398,7 @@ void RenderFrame(void)
 	cb0_values.RedAmount = 0.5f; //50 % of vertex shader value
 
 	XMMATRIX projection, world, view;
+<<<<<<< HEAD
 	view = camera->GetViewMatrix();// Camera->View(Camera->getPos(), Camera->getLook(), Camera->getUp());
 	world = XMMatrixRotationX(XMConvertToRadians(0));
 	world *= XMMatrixRotationY(XMConvertToRadians(0));
@@ -405,6 +406,11 @@ void RenderFrame(void)
 	world *= XMMatrixTranslation(0, 0, 15);
 
 	projection = XMMatrixPerspectiveFovLH(XMConvertToRadians(45.0), 640 / 480, 1.0, 100.0);
+=======
+	view = Camera->View();
+	world = XMMatrixTranslation(0, 0, 15);
+	projection = Camera->setLens(XMConvertToRadians(45.0), 640.0 / 480.0, 1.0, 100.0);
+>>>>>>> parent of b87047e... Backup
 	transpose = XMMatrixTranspose(world);
 
 	cb0_values.WorldViewProjection = world * view * projection;
