@@ -30,3 +30,14 @@
 *.exe
 *.out
 *.app
+AGP/.vs/AGPLabs/v15/.suo
+AGP/.vs/AGPLabs/v15/Browse.VC.db
+*.db
+*.ipch
+*.cpp
+*.ilk
+*.log
+*.pdb
+*.tlog
+*.idb
+*.pdb

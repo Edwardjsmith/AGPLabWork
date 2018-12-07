@@ -28,6 +28,7 @@ c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamath.h(2742)
 c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamath.h(2743): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
 c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamath.h(2754): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
 <<<<<<< HEAD
+<<<<<<< HEAD
 c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamathconvert.inl(2254): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
 c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamathconvert.inl(4523): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
 c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamathconvert.inl(4577): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
@@ -70,6 +71,8 @@ c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamath.h(2754)
   Generating Code...
   AGPLabs.vcxproj -> C:\Users\coeol\OneDrive\Documents\cookie_clicker_rep\AGPLabWork\AGP\x64\Debug\AGPLabs.exe
 =======
+=======
+>>>>>>> parent of b87047e... Backup
 c:\users\edwardsmith\documents\github\agplabwork\agp\main.cpp(399): warning C4305: 'argument': truncation from 'double' to 'FLOAT'
   AGPLabs.vcxproj -> C:\Users\EdwardSmith\Documents\GitHub\AGPLabWork\AGP\x64\Debug\AGPLabs.exe
 >>>>>>> parent of b87047e... Backup

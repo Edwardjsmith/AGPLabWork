@@ -399,6 +399,7 @@ void RenderFrame(void)
 
 	XMMATRIX projection, world, view;
 <<<<<<< HEAD
+<<<<<<< HEAD
 	view = camera->GetViewMatrix();// Camera->View(Camera->getPos(), Camera->getLook(), Camera->getUp());
 	world = XMMatrixRotationX(XMConvertToRadians(0));
 	world *= XMMatrixRotationY(XMConvertToRadians(0));
@@ -407,6 +408,8 @@ void RenderFrame(void)
 
 	projection = XMMatrixPerspectiveFovLH(XMConvertToRadians(45.0), 640 / 480, 1.0, 100.0);
 =======
+=======
+>>>>>>> parent of b87047e... Backup
 	view = Camera->View();
 	world = XMMatrixTranslation(0, 0, 15);
 	projection = Camera->setLens(XMConvertToRadians(45.0), 640.0 / 480.0, 1.0, 100.0);
