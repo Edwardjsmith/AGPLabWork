@@ -6,8 +6,8 @@ public:
 	Model(ID3D11Device* device, ID3D11DeviceContext* context);
 	~Model();
 
-	HRESULT LoadObjModel(const char* filename);
-	void Draw(XMMATRIX* view, XMMATRIX* projection);
+	virtual HRESULT LoadObjModel(const char* filename);
+	virtual void Draw(XMMATRIX* view, XMMATRIX* projection);
 
 	void setPosition(float x, float y, float z);
 
@@ -32,7 +32,8 @@ public:
 	void setZRotation(float value);
 	float getZRotation();
 
-private:
+protected:
+
 	ID3D11Device*			m_pD3DDevice;
 	ID3D11DeviceContext*	m_pImmediateContext;
 

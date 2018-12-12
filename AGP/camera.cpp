@@ -53,3 +53,18 @@ Camera::~Camera()
 {
 }
 
+float Camera::getX()
+{
+	return m_x;
+}
+
+float Camera::getY()
+{
+	return m_y;
+}
+
+float Camera::getZ()
+{
+	return m_z;
+}
+

@@ -13,7 +13,7 @@
 
 #include "camera.h"
 #include "text2D.h"
-#include "Model.h"
+#include "CubeMap.h"
 
 #include "timer.h"
 
@@ -45,11 +45,10 @@ ID3D11ShaderResourceView* g_pTexture0;
 ID3D11SamplerState* g_pSampler0;
 
 Camera* camera;
-
 timer* Timer;
-
 Text2D* g_2DText;
 Model* g_model;
+CubeMap* cubeMap;
 
 XMVECTOR g_directional_light_shines_from;
 XMVECTOR g_directional_light_colour;
@@ -157,6 +156,8 @@ HRESULT InitialiseGraphics()
 	g_model = new Model(g_pD3DDevice, g_pImmediateContext);
 	g_model->LoadObjModel((char*)"assets/cube.obj");
 	g_model->setPosition(0, 0, 15);
+	cubeMap = new CubeMap(g_pD3DDevice, g_pImmediateContext);
+	cubeMap->setPosition(camera->getX(), camera->getY(), camera->getZ());
 	//g_model->setPosition(0, 0, 15);
 	//Define vertices of a triangle - screen coordinates -1.0 to +1.0
 	POS_COL_TEX_NORM_VERTEX vertices[] =
@@ -368,7 +369,7 @@ void RenderFrame(void)
 	g_ambient_light_colour = XMVectorSet(0.1f, 0.1f, 0.1f, 1.0f);
 	//Select which primitive type to use
 	g_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	
+
 
 	//XMMATRIX rotation = XMMatrixRotationY(0);
 
@@ -397,7 +398,7 @@ void RenderFrame(void)
 	cb0_values.directional_light_vector = XMVector3Normalize(cb0_values.directional_light_vector);
 
 	//Upload these new values
-	
+
 	g_pImmediateContext->UpdateSubresource(g_pConstantBuffer0, 0, 0, &cb0_values, 0, 0);
 	g_pImmediateContext->VSSetConstantBuffers(0, 1, &g_pConstantBuffer0);
 
@@ -413,11 +414,12 @@ void RenderFrame(void)
 
 	//Draw the vertex buffer to the back buffer
 	g_pImmediateContext->Draw(36, 0);
-	
+
 	//
 	g_2DText->AddText("Hello!", -1.0f, 1.0f, 0.2f);
 	g_2DText->RenderText();*/
 
+	cubeMap->setPosition(camera->getX(), camera->getY(), camera->getZ());
 	g_pImmediateContext->ClearRenderTargetView(g_pBackBufferRTView, gClearColour);
 	g_pImmediateContext->ClearDepthStencilView(g_pZBuffer, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
@@ -429,6 +431,7 @@ void RenderFrame(void)
 	g_pImmediateContext->PSSetShaderResources(0, 1, &g_pTexture0);
 
 	g_model->Draw(&view, &projection);
+	cubeMap->Draw(&view, &projection);
 
 	g_2DText->AddText("Hello!", -1.0f, 1.0f, 0.2f);
 	g_2DText->RenderText();
@@ -672,10 +675,12 @@ void ShutdownD3D()
 	
 	if (g_pTexture0) g_pTexture0->Release();
 	if (g_pSampler0) g_pSampler0->Release();
-	if (g_2DText)delete g_2DText;
-	if (Timer)delete Timer;
-	if (camera)delete camera;
-	if (g_model)delete g_model;
+	if (g_2DText) delete g_2DText;
+	if (Timer) delete Timer;
+	if (camera) delete camera;
+	if (g_model) delete g_model;
+
+	
 }
 
 
