@@ -15,5 +15,9 @@ private:
 	ID3D11RasterizerState* m_pRasterSkyBox = 0;
 	ID3D11DepthStencilState* m_pDepthWriteSolid = 0;
 	ID3D11DepthStencilState* m_pDepthWriteSkyBox = 0;
+
+
 };
+
+
 

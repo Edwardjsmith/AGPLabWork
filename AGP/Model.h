@@ -1,5 +1,11 @@
 #pragma once
 #include "objfilemodel.h"
+
+struct MODEL_CONSTANT_BUFFER
+{
+	XMMATRIX WorldViewProjection; //64 bytes (4 x 4 x4)
+};
+
 class Model
 {
 public:
@@ -46,5 +52,9 @@ protected:
 	float			m_x, m_y, m_z;
 	float			m_xAngle, m_yAngle, m_zAngle;
 	float			m_scale;
+
+	void setShaders();
+
+	MODEL_CONSTANT_BUFFER model_cb_values;
 };
 

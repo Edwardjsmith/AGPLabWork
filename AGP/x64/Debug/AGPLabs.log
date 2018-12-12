@@ -1,4 +1,4 @@
-﻿  main.cpp
+﻿  CubeMap.cpp
 c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamath.h(2662): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
 c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamath.h(2663): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
 c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamath.h(2664): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
@@ -27,14 +27,4 @@ c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamath.h(2732)
 c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamath.h(2742): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
 c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamath.h(2743): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
 c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamath.h(2754): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
-c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamathconvert.inl(2254): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
-c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamathconvert.inl(4523): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
-c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamathconvert.inl(4577): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
-c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamathconvert.inl(4639): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
-c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamathconvert.inl(4707): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
-c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamathconvert.inl(4770): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
-c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamathconvert.inl(4832): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
-c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamathvector.inl(1269): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
-c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamathmisc.inl(518): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
-c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamathmisc.inl(519): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
   AGPLabs.vcxproj -> C:\Users\EdwardSmith\Documents\GitHub\AGPLabWork\AGP\x64\Debug\AGPLabs.exe

@@ -1,9 +1,6 @@
 #include "Model.h"
 
-struct MODEL_CONSTANT_BUFFER
-{
-	XMMATRIX WorldViewProjection; //64 bytes (4 x 4 x4)
-};
+
 
 Model::Model(ID3D11Device * device, ID3D11DeviceContext * context)
 {
@@ -22,7 +19,6 @@ Model::~Model()
 	if (m_pVShader) m_pVShader->Release();
 	if (m_pObject) delete m_pObject;
 	if (m_pInputLayout) m_pInputLayout->Release();
-
 }
 
 HRESULT Model::LoadObjModel(const char * filename)
@@ -126,15 +122,12 @@ void Model::Draw(XMMATRIX* view, XMMATRIX* projection)
 	world *= XMMatrixRotationZ(XMConvertToRadians(m_zAngle));
 	world *= XMMatrixTranslation(m_x, m_y, m_z);
 
-	MODEL_CONSTANT_BUFFER model_cb_values;
 	model_cb_values.WorldViewProjection = world * (*view) * (*projection);
 
 	m_pImmediateContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
 	m_pImmediateContext->UpdateSubresource(m_pConstantBuffer, 0, 0, &model_cb_values, 0, 0);
 
-	m_pImmediateContext->VSSetShader(m_pVShader, 0, 0);
-	m_pImmediateContext->PSSetShader(m_pPShader, 0, 0);
-	m_pImmediateContext->IASetInputLayout(m_pInputLayout);
+	setShaders();
 
 	m_pObject->Draw();
 }
@@ -215,3 +208,9 @@ float Model::getZRotation()
 	return m_zAngle;
 }
 
+void Model::setShaders()
+{
+	m_pImmediateContext->VSSetShader(m_pVShader, 0, 0);
+	m_pImmediateContext->PSSetShader(m_pPShader, 0, 0);
+	m_pImmediateContext->IASetInputLayout(m_pInputLayout);
+}

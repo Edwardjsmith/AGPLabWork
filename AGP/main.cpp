@@ -48,7 +48,7 @@ Camera* camera;
 timer* Timer;
 Text2D* g_2DText;
 Model* g_model;
-CubeMap* cubeMap;
+CubeMap* g_cubeMap;
 
 XMVECTOR g_directional_light_shines_from;
 XMVECTOR g_directional_light_colour;
@@ -156,8 +156,11 @@ HRESULT InitialiseGraphics()
 	g_model = new Model(g_pD3DDevice, g_pImmediateContext);
 	g_model->LoadObjModel((char*)"assets/cube.obj");
 	g_model->setPosition(0, 0, 15);
-	cubeMap = new CubeMap(g_pD3DDevice, g_pImmediateContext);
-	cubeMap->setPosition(camera->getX(), camera->getY(), camera->getZ());
+
+	g_cubeMap = new CubeMap(g_pD3DDevice, g_pImmediateContext);
+	g_cubeMap->LoadObjModel((char*)"assets/cube.obj");
+	g_cubeMap->setPosition(camera->getX(), camera->getY(), camera->getZ());
+
 	//g_model->setPosition(0, 0, 15);
 	//Define vertices of a triangle - screen coordinates -1.0 to +1.0
 	POS_COL_TEX_NORM_VERTEX vertices[] =
@@ -419,7 +422,7 @@ void RenderFrame(void)
 	g_2DText->AddText("Hello!", -1.0f, 1.0f, 0.2f);
 	g_2DText->RenderText();*/
 
-	cubeMap->setPosition(camera->getX(), camera->getY(), camera->getZ());
+	g_cubeMap->setPosition(camera->getX(), camera->getY(), camera->getZ());
 	g_pImmediateContext->ClearRenderTargetView(g_pBackBufferRTView, gClearColour);
 	g_pImmediateContext->ClearDepthStencilView(g_pZBuffer, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
@@ -431,7 +434,7 @@ void RenderFrame(void)
 	g_pImmediateContext->PSSetShaderResources(0, 1, &g_pTexture0);
 
 	g_model->Draw(&view, &projection);
-	cubeMap->Draw(&view, &projection);
+	g_cubeMap->Draw(&view, &projection);
 
 	g_2DText->AddText("Hello!", -1.0f, 1.0f, 0.2f);
 	g_2DText->RenderText();
