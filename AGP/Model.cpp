@@ -9,6 +9,9 @@ Model::Model(ID3D11Device * device, ID3D11DeviceContext * context)
 	m_x = m_y = m_z = 0.0f;
 	m_xAngle = m_yAngle = m_zAngle = 0.0f;
 	m_scale = 1.0f;
+
+	shaderFile = "model_shaders.hlsl";
+	shaderType = "Model";
 }
 
 Model::~Model()
@@ -19,6 +22,8 @@ Model::~Model()
 	if (m_pVShader) m_pVShader->Release();
 	if (m_pObject) delete m_pObject;
 	if (m_pInputLayout) m_pInputLayout->Release();
+	if (m_pTexture) m_pTexture->Release();
+	if (m_pSampler) m_pSampler->Release();
 }
 
 HRESULT Model::LoadObjModel(const char * filename)
@@ -30,7 +35,7 @@ HRESULT Model::LoadObjModel(const char * filename)
 
 	ID3DBlob *VS, *PS, *error;
 
-	hr = D3DX11CompileFromFile("model_shaders.hlsl", 0, 0, "ModelVS", "vs_4_0", 0, 0, 0, &VS, &error, 0);
+	hr = D3DX11CompileFromFile(shaderFile.c_str(), 0, 0, (shaderType + "VS").c_str(), "vs_4_0", 0, 0, 0, &VS, &error, 0);
 
 	if (error != 0)//Check for shader compilation error
 	{
@@ -43,7 +48,7 @@ HRESULT Model::LoadObjModel(const char * filename)
 		}
 	}
 
-	hr = D3DX11CompileFromFile("model_shaders.hlsl", 0, 0, "ModelPS", "ps_4_0", 0, 0, 0, &PS, &error, 0);
+	hr = D3DX11CompileFromFile(shaderFile.c_str(), 0, 0, (shaderType + "PS").c_str() , "ps_4_0", 0, 0, 0, &PS, &error, 0);
 
 	if (error != 0)//Check for shader compilation error
 	{
@@ -109,12 +114,30 @@ HRESULT Model::LoadObjModel(const char * filename)
 		return hr;
 	}
 
+	D3D11_SAMPLER_DESC sampler_desc;
+	ZeroMemory(&sampler_desc, sizeof(sampler_desc));
+	sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	sampler_desc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampler_desc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampler_desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampler_desc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	hr = m_pD3DDevice->CreateSamplerState(&sampler_desc, &m_pSampler);
+	if (FAILED(hr))
+	{
+		DXTRACE_MSG("Failed to create sampler");
+		return hr;
+	}
+
 	return S_OK;
 }
 
 void Model::Draw(XMMATRIX* view, XMMATRIX* projection)
 {
 	//m_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	m_pImmediateContext->PSSetSamplers(0, 1, &m_pSampler);
+	m_pImmediateContext->PSSetShaderResources(0, 1, &m_pTexture);
 
 	XMMATRIX world = XMMatrixScaling(m_scale, m_scale, m_scale);
 	world *= XMMatrixRotationX(XMConvertToRadians(m_xAngle));

@@ -430,8 +430,8 @@ void RenderFrame(void)
 	view = camera->GetViewMatrix();// Camera->View(Camera->getPos(), Camera->getLook(), Camera->getUp());
 	projection = XMMatrixPerspectiveFovLH(XMConvertToRadians(45.0), 640 / 480, 1.0, 100.0);
 
-	g_pImmediateContext->PSSetSamplers(0, 1, &g_pSampler0);
-	g_pImmediateContext->PSSetShaderResources(0, 1, &g_pTexture0);
+	//g_pImmediateContext->PSSetSamplers(0, 1, &g_pSampler0);
+	//g_pImmediateContext->PSSetShaderResources(0, 1, &g_pTexture0);
 
 	g_model->Draw(&view, &projection);
 	g_cubeMap->Draw(&view, &projection);

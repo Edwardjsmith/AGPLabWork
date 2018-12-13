@@ -1,8 +1,5 @@
 #include "timer.h"
 
-
-
-
 timer::timer()
 {
 	mSecondsPerCount = 0;

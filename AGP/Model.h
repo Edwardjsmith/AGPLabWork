@@ -1,6 +1,7 @@
 #pragma once
 #include "objfilemodel.h"
 
+
 struct MODEL_CONSTANT_BUFFER
 {
 	XMMATRIX WorldViewProjection; //64 bytes (4 x 4 x4)
@@ -56,5 +57,13 @@ protected:
 	void setShaders();
 
 	MODEL_CONSTANT_BUFFER model_cb_values;
+
+	string shaderType;
+	string shaderFile;
+	string shaderVersion;
+
+	ID3D11ShaderResourceView* m_pTexture;
+	ID3D11SamplerState* m_pSampler;
+
 };
 
