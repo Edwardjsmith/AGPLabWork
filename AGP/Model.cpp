@@ -12,6 +12,7 @@ Model::Model(ID3D11Device * device, ID3D11DeviceContext * context)
 
 	shaderFile = "model_shaders.hlsl";
 	shaderType = "Model";
+
 }
 
 Model::~Model()
@@ -26,7 +27,7 @@ Model::~Model()
 	if (m_pSampler) m_pSampler->Release();
 }
 
-HRESULT Model::LoadObjModel(const char * filename)
+HRESULT Model::LoadObjModel(const char * filename, const char* textureName)
 {
 	HRESULT hr = S_OK;
 	m_pObject = new ObjFileModel((char*)filename, m_pD3DDevice, m_pImmediateContext);
@@ -114,6 +115,14 @@ HRESULT Model::LoadObjModel(const char * filename)
 		return hr;
 	}
 
+	hr = D3DX11CreateShaderResourceViewFromFile(m_pD3DDevice, textureName, NULL, NULL, &m_pTexture, NULL);
+
+	if (FAILED(hr))
+	{
+		DXTRACE_MSG("Failed to create texture");
+		return hr;
+	}
+
 	D3D11_SAMPLER_DESC sampler_desc;
 	ZeroMemory(&sampler_desc, sizeof(sampler_desc));
 	sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
@@ -128,6 +137,7 @@ HRESULT Model::LoadObjModel(const char * filename)
 		DXTRACE_MSG("Failed to create sampler");
 		return hr;
 	}
+
 
 	return S_OK;
 }

@@ -154,11 +154,11 @@ HRESULT InitialiseGraphics()
 
 	camera = new Camera(0, 0, -0.5, 0, 0);
 	g_model = new Model(g_pD3DDevice, g_pImmediateContext);
-	g_model->LoadObjModel((char*)"assets/cube.obj");
+	g_model->LoadObjModel((char*)"assets/cube.obj", "assets/texture.bmp");
 	g_model->setPosition(0, 0, 15);
 
 	g_cubeMap = new CubeMap(g_pD3DDevice, g_pImmediateContext);
-	g_cubeMap->LoadObjModel((char*)"assets/cube.obj");
+	g_cubeMap->LoadObjModel((char*)"assets/cube.obj", "assets/skybox02.dds");
 	g_cubeMap->setPosition(camera->getX(), camera->getY(), camera->getZ());
 
 	//g_model->setPosition(0, 0, 15);

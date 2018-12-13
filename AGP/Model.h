@@ -13,7 +13,7 @@ public:
 	Model(ID3D11Device* device, ID3D11DeviceContext* context);
 	~Model();
 
-	virtual HRESULT LoadObjModel(const char* filename);
+	virtual HRESULT LoadObjModel(const char* filename, const char* textureName);
 	virtual void Draw(XMMATRIX* view, XMMATRIX* projection);
 
 	void setPosition(float x, float y, float z);
@@ -64,6 +64,7 @@ protected:
 
 	ID3D11ShaderResourceView* m_pTexture;
 	ID3D11SamplerState* m_pSampler;
+
 
 };
 

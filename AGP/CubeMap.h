@@ -8,7 +8,7 @@ public:
 	~CubeMap();
 
 	void Draw(XMMATRIX* view, XMMATRIX* projection) override;
-	HRESULT LoadObjModel(const char* filename) override;
+	HRESULT LoadObjModel(const char* filename, const char* textureName) override;
 
 private:
 	ID3D11RasterizerState* m_pRasterSolid = 0;
@@ -16,6 +16,7 @@ private:
 	ID3D11DepthStencilState* m_pDepthWriteSolid = 0;
 	ID3D11DepthStencilState* m_pDepthWriteSkyBox = 0;
 
+	
 
 };
 
