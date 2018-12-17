@@ -1,8 +1,16 @@
 //The #include order is important
-#define W_key  0x57
-#define A_key  0x41
-#define S_key  0x53
-#define D_key  0x44
+#define DIK_W               0x11
+#define DIK_A               0x1E
+#define DIK_S               0x1F
+#define DIK_D               0x20
+
+#define DIK_UP              0xC8    /* UpArrow on arrow keypad */
+#define DIK_LEFT            0xCB    /* LeftArrow on arrow keypad */
+#define DIK_RIGHT           0xCD    /* RightArrow on arrow keypad */
+#define DIK_DOWN            0xD0    /* DownArrow on arrow keypad */
+
+#define DIK_ESCAPE          0x01
+
 
 #include <d3d11.h>
 #include <dxgi.h>
@@ -14,8 +22,8 @@
 #include "camera.h"
 #include "text2D.h"
 #include "CubeMap.h"
-
 #include "timer.h"
+#include "input.h"
 
 
 #define _XM_NO_INTRINSICS_
@@ -49,10 +57,14 @@ timer* Timer;
 Text2D* g_2DText;
 Model* g_model;
 CubeMap* g_cubeMap;
+input* Input;
 
 XMVECTOR g_directional_light_shines_from;
 XMVECTOR g_directional_light_colour;
 XMVECTOR g_ambient_light_colour;
+
+float moveSpeed = 10.0f;
+float panningSpeed = moveSpeed * 10;
 
 //Define vertex structure
 struct POS_COL_TEX_NORM_VERTEX//This will be added to and renamed in future tutorials
@@ -125,7 +137,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	// Main message loop
 	MSG msg = { 0 };
-
+	Input = new input();
+	Input->initKeyboard(g_hInst, g_hWnd);
 	Timer = new timer();
 	while (msg.message != WM_QUIT)
 	{
@@ -152,11 +165,11 @@ HRESULT InitialiseGraphics()
 {
 	HRESULT hr = S_OK;
 
-	camera = new Camera(0, 0, -0.5, 0, 0);
-	g_model = new Model(g_pD3DDevice, g_pImmediateContext);
+	
+	g_model = new Model(g_pD3DDevice, g_pImmediateContext, 0);
 	g_model->LoadObjModel((char*)"assets/cube.obj", "assets/texture.bmp");
 	g_model->setPosition(0, 0, 15);
-
+	camera = new Camera(0, 0, -0.5, 0, 0);
 	g_cubeMap = new CubeMap(g_pD3DDevice, g_pImmediateContext);
 	g_cubeMap->LoadObjModel((char*)"assets/cube.obj", "assets/skybox02.dds");
 	g_cubeMap->setPosition(camera->getX(), camera->getY(), camera->getZ());
@@ -422,6 +435,39 @@ void RenderFrame(void)
 	g_2DText->AddText("Hello!", -1.0f, 1.0f, 0.2f);
 	g_2DText->RenderText();*/
 
+	Input->readInputStates();
+
+	if (Input->isKeyPressed(DIK_ESCAPE))
+	{
+		DestroyWindow(g_hWnd);
+	}
+	if (Input->isKeyPressed(DIK_UPARROW)) {
+		g_model->Forward(moveSpeed * Timer->deltaTime());
+	}
+	if (Input->isKeyPressed(DIK_DOWNARROW)) {
+		g_model->Forward(-moveSpeed * Timer->deltaTime());
+	}
+	if (Input->isKeyPressed(DIK_A)) {
+		g_model->Rotate(-panningSpeed * Timer->deltaTime());
+	}
+	if (Input->isKeyPressed(DIK_D)) {
+		g_model->Rotate(panningSpeed * Timer->deltaTime());
+	}
+	if (Input->isKeyPressed(DIK_W)) {
+		camera->Pitch(panningSpeed * Timer->deltaTime());
+	}
+	if (Input->isKeyPressed(DIK_S)) {
+		camera->Pitch(-panningSpeed * Timer->deltaTime());
+	}
+	if (Input->isKeyPressed(DIK_LEFTARROW)) {
+		g_model->Strafe((moveSpeed / 8) * Timer->deltaTime());
+
+	}
+	if (Input->isKeyPressed(DIK_RIGHTARROW)) {
+		g_model->Strafe((-moveSpeed / 8) * Timer->deltaTime());
+
+	}
+
 	g_cubeMap->setPosition(camera->getX(), camera->getY(), camera->getZ());
 	g_pImmediateContext->ClearRenderTargetView(g_pBackBufferRTView, gClearColour);
 	g_pImmediateContext->ClearDepthStencilView(g_pZBuffer, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
@@ -499,7 +545,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 
 	case WM_KEYDOWN:
-		if (wParam == VK_ESCAPE)
+		/*if (wParam == VK_ESCAPE)
 			DestroyWindow(g_hWnd);
 		if (wParam == VK_UP) {
 			camera->Forward(1000 * Timer->deltaTime());
@@ -526,7 +572,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		if (wParam == VK_RIGHT) {
 			camera->Strafe(1000 * Timer->deltaTime());
 
-		}
+		}*/
 		return 0;
 
 	default:
@@ -682,6 +728,7 @@ void ShutdownD3D()
 	if (Timer) delete Timer;
 	if (camera) delete camera;
 	if (g_model) delete g_model;
+	if (Input) delete Input;
 
 	
 }

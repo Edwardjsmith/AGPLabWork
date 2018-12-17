@@ -2,13 +2,17 @@
 
 
 
-Model::Model(ID3D11Device * device, ID3D11DeviceContext * context)
+Model::Model(ID3D11Device * device, ID3D11DeviceContext * context, float rotation)
 {
 	m_pD3DDevice = device;
 	m_pImmediateContext = context;
 	m_x = m_y = m_z = 0.0f;
 	m_xAngle = m_yAngle = m_zAngle = 0.0f;
 	m_scale = 1.0f;
+	m_model_rotation = rotation;
+
+	m_dx = sin(m_model_rotation * (XM_PI / 180));
+	m_dz = cos(m_model_rotation * (XM_PI / 180));
 
 	shaderFile = "model_shaders.hlsl";
 	shaderType = "Model";
@@ -239,6 +243,43 @@ void Model::setZRotation(float value)
 float Model::getZRotation()
 {
 	return m_zAngle;
+}
+
+void Model::Rotate(float deg_change)
+{
+	m_model_rotation += deg_change;
+	m_dx = sin(m_model_rotation * (XM_PI / 180));
+	m_dz = cos(m_model_rotation * (XM_PI / 180));
+}
+
+void Model::Pitch(float deg_change)
+{
+}
+
+void Model::Forward(float movement)
+{
+	m_x += movement * m_dx;
+	m_y += movement * m_dy;
+	m_z += movement * m_dz;
+}
+
+void Model::Up(float movement)
+{
+	m_y += movement * m_dy;
+}
+
+void Model::Strafe(float distance)
+{
+	m_lookat = XMVectorSet(m_x + m_dx, m_y + m_dy, m_z + m_dz, 0.0);
+	m_up = XMVectorSet(0.0, 1.0, 0.0, 0.0);
+	m_right = XMVector3Cross(m_lookat - m_position, m_up);
+	m_x += m_right.x * distance;
+	m_z += m_right.z * distance;
+}
+
+XMVECTOR Model::getPos()
+{
+	return m_position;
 }
 
 void Model::setShaders()

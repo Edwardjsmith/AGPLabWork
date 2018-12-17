@@ -10,7 +10,7 @@ struct MODEL_CONSTANT_BUFFER
 class Model
 {
 public:
-	Model(ID3D11Device* device, ID3D11DeviceContext* context);
+	Model(ID3D11Device* device, ID3D11DeviceContext* context, float rotation);
 	~Model();
 
 	virtual HRESULT LoadObjModel(const char* filename, const char* textureName);
@@ -39,6 +39,14 @@ public:
 	void setZRotation(float value);
 	float getZRotation();
 
+	void Rotate(float deg_change);
+	void Pitch(float deg_change);
+	void Forward(float movement);
+	void Up(float movement);
+	void Strafe(float distance);
+
+	XMVECTOR getPos();
+
 protected:
 
 	ID3D11Device*			m_pD3DDevice;
@@ -50,9 +58,10 @@ protected:
 	ID3D11InputLayout*	m_pInputLayout;
 	ID3D11Buffer*		m_pConstantBuffer;
 
-	float			m_x, m_y, m_z;
+	float			m_x, m_y, m_z, m_dx, m_dy, m_dz;
 	float			m_xAngle, m_yAngle, m_zAngle;
 	float			m_scale;
+	float			m_model_rotation;
 
 	void setShaders();
 
@@ -64,6 +73,8 @@ protected:
 
 	ID3D11ShaderResourceView* m_pTexture;
 	ID3D11SamplerState* m_pSampler;
+
+	XMVECTOR m_position, m_up, m_lookat, m_rotation, m_right;
 
 
 };
