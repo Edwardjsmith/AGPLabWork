@@ -91,3 +91,8 @@ void timer::tick()
 		mDeltaTime = 0;
 	}
 }
+
+float timer::getCurrentTime()
+{
+	return mCurrTime;
+}

@@ -487,7 +487,7 @@ void RenderFrame(void)
 	g_model->Draw(&view, &projection);
 	g_cubeMap->Draw(&view, &projection);
 
-	particle->Draw(&view, &projection, &camera->getPos(), Timer->gameTime(), Timer->deltaTime());
+	particle->Draw(&view, &projection, &camera->getPos(), Timer->getCurrentTime(), Timer->deltaTime());
 
 	g_2DText->AddText("Hello!", -1.0f, 1.0f, 0.2f);
 	g_2DText->RenderText();
@@ -550,37 +550,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;
-
-	case WM_KEYDOWN:
-		/*if (wParam == VK_ESCAPE)
-			DestroyWindow(g_hWnd);
-		if (wParam == VK_UP) {
-			camera->Forward(1000 * Timer->deltaTime());
-		}
-		if (wParam == VK_DOWN) {
-			camera->Forward(-1000 * Timer->deltaTime());
-		}
-		if (wParam == A_key) {
-			camera->Rotate(1000 * Timer->deltaTime());
-		}
-		if (wParam == D_key) {
-			camera->Rotate(-1000* Timer->deltaTime());
-		}
-		if (wParam == W_key) {
-			camera->Pitch(1000 * Timer->deltaTime());
-		}
-		if (wParam == S_key) {
-			camera->Pitch(-1000 * Timer->deltaTime());
-		}
-		if (wParam == VK_LEFT) {
-			camera->Strafe(-1000 * Timer->deltaTime());
-
-		}
-		if (wParam == VK_RIGHT) {
-			camera->Strafe(1000 * Timer->deltaTime());
-
-		}*/
-		return 0;
 
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);

@@ -24,7 +24,7 @@ public:
 	~particleGenerator();
 
 	int createParticle();
-	void Draw(XMMATRIX* view, XMMATRIX* projection, XMFLOAT3* cameraPos, float timeNow, float dt);
+	void Draw(XMMATRIX* view, XMMATRIX* projection, XMFLOAT3* cameraPos, float timeNow, float deltaTime);
 	void drawOne(Particle* part, XMMATRIX* view, XMMATRIX* projection, XMFLOAT3* cameraPos);
 	
 
@@ -42,7 +42,7 @@ private:
 
 	float m_timePrevious;
 	float m_untilParticle;
-	float randomZeroToOne();
+	float RandomZeroToOne();
 	float RandomNegOneToPosOne();
 	float m_age;
 
