@@ -23,6 +23,8 @@ public:
 	float getY();
 	float getZ();
 
+	XMFLOAT3 getPos();
+
 private:
 
 	float m_x, m_y, m_z, m_dx, m_dy, m_dz, m_camera_rotation, m_camera_pitch;

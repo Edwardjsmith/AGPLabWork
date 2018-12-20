@@ -24,6 +24,7 @@
 #include "CubeMap.h"
 #include "timer.h"
 #include "input.h"
+#include "particleGenerator.h"
 
 
 #define _XM_NO_INTRINSICS_
@@ -58,6 +59,7 @@ Text2D* g_2DText;
 Model* g_model;
 CubeMap* g_cubeMap;
 input* Input;
+particleGenerator* particle;
 
 XMVECTOR g_directional_light_shines_from;
 XMVECTOR g_directional_light_colour;
@@ -173,6 +175,9 @@ HRESULT InitialiseGraphics()
 	g_cubeMap = new CubeMap(g_pD3DDevice, g_pImmediateContext);
 	g_cubeMap->LoadObjModel((char*)"assets/cube.obj", "assets/skybox02.dds");
 	g_cubeMap->setPosition(camera->getX(), camera->getY(), camera->getZ());
+
+	particle = new particleGenerator(g_pD3DDevice, g_pImmediateContext, 0);
+	particle->createParticle();
 
 	//g_model->setPosition(0, 0, 15);
 	//Define vertices of a triangle - screen coordinates -1.0 to +1.0
@@ -482,6 +487,8 @@ void RenderFrame(void)
 	g_model->Draw(&view, &projection);
 	g_cubeMap->Draw(&view, &projection);
 
+	particle->Draw(&view, &projection, &camera->getPos(), Timer->gameTime(), Timer->deltaTime());
+
 	g_2DText->AddText("Hello!", -1.0f, 1.0f, 0.2f);
 	g_2DText->RenderText();
 
@@ -729,6 +736,7 @@ void ShutdownD3D()
 	if (camera) delete camera;
 	if (g_model) delete g_model;
 	if (Input) delete Input;
+	if (particle) delete particle;
 
 	
 }

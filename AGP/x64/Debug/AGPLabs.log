@@ -1,4 +1,4 @@
-﻿  main.cpp
+﻿  particleGenerator.cpp
 c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamath.h(2662): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
 c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamath.h(2663): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
 c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamath.h(2664): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
@@ -27,18 +27,30 @@ c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamath.h(2732)
 c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamath.h(2742): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
 c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamath.h(2743): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
 c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamath.h(2754): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
-c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamathconvert.inl(2254): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
-c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamathconvert.inl(4523): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
-c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamathconvert.inl(4577): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
-c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamathconvert.inl(4639): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
-c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamathconvert.inl(4707): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
-c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamathconvert.inl(4770): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
-c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamathconvert.inl(4832): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
-c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamathvector.inl(1269): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
-c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamathmisc.inl(518): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
-c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamathmisc.inl(519): warning C4838: conversion from 'unsigned int' to 'INT' requires a narrowing conversion
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-timer.obj : warning LNK4204: 'C:\Users\EdwardSmith\Documents\GitHub\AGPLabWork\AGP\x64\Debug\vc141.pdb' is missing debugging information for referencing module; linking object as if no debug info
-text2D.obj : warning LNK4204: 'C:\Users\EdwardSmith\Documents\GitHub\AGPLabWork\AGP\x64\Debug\vc141.pdb' is missing debugging information for referencing module; linking object as if no debug info
-objfilemodel.obj : warning LNK4204: 'C:\Users\EdwardSmith\Documents\GitHub\AGPLabWork\AGP\x64\Debug\vc141.pdb' is missing debugging information for referencing module; linking object as if no debug info
-  AGPLabs.vcxproj -> C:\Users\EdwardSmith\Documents\GitHub\AGPLabWork\AGP\x64\Debug\AGPLabs.exe
+c:\users\edwardsmith\documents\github\agplabwork\agp\particlegenerator.cpp(269): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+c:\users\edwardsmith\documents\github\agplabwork\agp\particlegenerator.cpp(274): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+c:\program files (x86)\microsoft visual studio\2017\enterprise\vc\tools\msvc\14.15.26726\include\list(1515): error C2064: term does not evaluate to a function taking 1 arguments
+  c:\program files (x86)\microsoft visual studio\2017\enterprise\vc\tools\msvc\14.15.26726\include\list(1508): note: see reference to function template instantiation 'void std::list<Particle *,std::allocator<_Ty>>::_Remove_if<_Pr1>(_Pr1 &)' being compiled
+          with
+          [
+              _Ty=Particle *,
+              _Pr1=int
+          ]
+  c:\program files (x86)\microsoft visual studio\2017\enterprise\vc\tools\msvc\14.15.26726\include\list(1508): note: see reference to function template instantiation 'void std::list<Particle *,std::allocator<_Ty>>::_Remove_if<_Pr1>(_Pr1 &)' being compiled
+          with
+          [
+              _Ty=Particle *,
+              _Pr1=int
+          ]
+  c:\users\edwardsmith\documents\github\agplabwork\agp\particlegenerator.cpp(33): note: see reference to function template instantiation 'void std::list<Particle *,std::allocator<_Ty>>::remove_if<int>(_Pr1)' being compiled
+          with
+          [
+              _Ty=Particle *,
+              _Pr1=int
+          ]
+  c:\users\edwardsmith\documents\github\agplabwork\agp\particlegenerator.cpp(33): note: see reference to function template instantiation 'void std::list<Particle *,std::allocator<_Ty>>::remove_if<int>(_Pr1)' being compiled
+          with
+          [
+              _Ty=Particle *,
+              _Pr1=int
+          ]

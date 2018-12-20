@@ -73,3 +73,8 @@ float Camera::getZ()
 	return m_z;
 }
 
+XMFLOAT3 Camera::getPos()
+{
+	return XMFLOAT3(m_x, m_y, m_z);
+}
+
