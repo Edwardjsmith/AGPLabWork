@@ -447,16 +447,16 @@ void RenderFrame(void)
 		DestroyWindow(g_hWnd);
 	}
 	if (Input->isKeyPressed(DIK_UPARROW)) {
-		g_model->Forward(moveSpeed * Timer->deltaTime());
+		camera->Forward(moveSpeed * Timer->deltaTime());
 	}
 	if (Input->isKeyPressed(DIK_DOWNARROW)) {
-		g_model->Forward(-moveSpeed * Timer->deltaTime());
+		camera->Forward(-moveSpeed * Timer->deltaTime());
 	}
 	if (Input->isKeyPressed(DIK_A)) {
-		g_model->Rotate(-panningSpeed * Timer->deltaTime());
+		camera->Rotate(-panningSpeed * Timer->deltaTime());
 	}
 	if (Input->isKeyPressed(DIK_D)) {
-		g_model->Rotate(panningSpeed * Timer->deltaTime());
+		camera->Rotate(panningSpeed * Timer->deltaTime());
 	}
 	if (Input->isKeyPressed(DIK_W)) {
 		camera->Pitch(panningSpeed * Timer->deltaTime());
@@ -465,11 +465,11 @@ void RenderFrame(void)
 		camera->Pitch(-panningSpeed * Timer->deltaTime());
 	}
 	if (Input->isKeyPressed(DIK_LEFTARROW)) {
-		g_model->Strafe((moveSpeed / 8) * Timer->deltaTime());
+		camera->Strafe((moveSpeed / 8) * Timer->deltaTime());
 
 	}
 	if (Input->isKeyPressed(DIK_RIGHTARROW)) {
-		g_model->Strafe((-moveSpeed / 8) * Timer->deltaTime());
+		camera->Strafe((-moveSpeed / 8) * Timer->deltaTime());
 
 	}
 
