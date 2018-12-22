@@ -33,7 +33,7 @@ private:
 	std::list<Particle*> m_free;
 	std::list<Particle*> m_active;
 
-	int numOfParticles = 100;
+	int numOfParticles = 10000;
 
 	ID3D11RasterizerState* m_pRasterSolid = 0;
 	ID3D11RasterizerState* m_pRasterParticle = 0;
