@@ -144,6 +144,7 @@
     <ClCompile Include="objfilemodel.cpp" />
     <ClCompile Include="particleGenerator.cpp" />
     <ClCompile Include="text2D.cpp" />
+    <ClCompile Include="thirdPersonCamera.cpp" />
     <ClCompile Include="timer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -186,6 +187,7 @@
     <ClInclude Include="objfilemodel.h" />
     <ClInclude Include="particleGenerator.h" />
     <ClInclude Include="text2D.h" />
+    <ClInclude Include="thirdPersonCamera.h" />
     <ClInclude Include="timer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

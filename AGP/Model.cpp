@@ -174,6 +174,8 @@ void Model::setPosition(float x, float y, float z)
 	m_x = x;
 	m_y = y;
 	m_z = z;
+
+	m_position = XMVectorSet(m_x, m_y, m_z, 0);
 }
 
 void Model::setX(float x)
@@ -279,7 +281,7 @@ void Model::Strafe(float distance)
 
 XMVECTOR Model::getPos()
 {
-	return m_position;
+	return m_position = XMVectorSet(m_x, m_y, m_z, 0);;
 }
 
 void Model::setShaders()

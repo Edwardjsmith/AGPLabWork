@@ -33,23 +33,26 @@ void Camera::Forward(float movement)
 }
 void Camera::Up(float movement) 
 {
-	m_y += movement * m_dy;
+	m_y += m_up.y * movement;
+	m_z += m_up.z * movement;
 }
 void Camera::Strafe(float movement)
 {
 	/*Hint: Use the cross product calculation here first to calculate the direction*/
 	//m_x += m_ax * movement;
 	//m_z += m_az * movement;
+	
 	m_right = XMVector3Cross(m_lookat - m_position, m_up);
 
 	m_x += m_right.x * movement;
 	m_z += m_right.z * movement;
+	
 }
 
 XMMATRIX Camera::GetViewMatrix()
 {
 	m_position = XMVectorSet(m_x, m_y, m_z, 0.0);
-	m_lookat = XMVectorSet(m_x + m_dx, m_y + m_dy, m_z + m_dz, 0.0);
+	m_lookat = XMVectorSet(m_x, m_y + m_dy, m_z + m_dz, 0.0);
 	m_up = XMVectorSet(0.0, 1.0, 0.0, 0.0);
 	return XMMatrixLookAtLH(m_position, m_lookat, m_up);
 }

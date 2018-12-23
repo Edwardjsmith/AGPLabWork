@@ -19,7 +19,7 @@
 #include <dxerr.h>
 #include <xnamath.h>
 
-#include "camera.h"
+#include "thirdPersonCamera.h"
 #include "text2D.h"
 #include "CubeMap.h"
 #include "timer.h"
@@ -53,7 +53,7 @@ ID3D11DepthStencilView* g_pZBuffer;
 ID3D11ShaderResourceView* g_pTexture0;
 ID3D11SamplerState* g_pSampler0;
 
-Camera* camera;
+thirdPersonCamera* camera;
 timer* Timer;
 Text2D* g_2DText;
 Model* g_model;
@@ -66,7 +66,6 @@ XMVECTOR g_directional_light_colour;
 XMVECTOR g_ambient_light_colour;
 
 float moveSpeed = 10.0f;
-float panningSpeed = moveSpeed * 10;
 
 //Define vertex structure
 struct POS_COL_TEX_NORM_VERTEX//This will be added to and renamed in future tutorials
@@ -171,7 +170,7 @@ HRESULT InitialiseGraphics()
 	g_model = new Model(g_pD3DDevice, g_pImmediateContext, 0);
 	g_model->LoadObjModel((char*)"assets/cube.obj", "assets/texture.bmp");
 	g_model->setPosition(0, 0, 15);
-	camera = new Camera(0, 0, -0.5, 0, 0);
+	camera = new thirdPersonCamera(0, 0, -0.5, 0, 0, g_model);
 	g_cubeMap = new CubeMap(g_pD3DDevice, g_pImmediateContext);
 	g_cubeMap->LoadObjModel((char*)"assets/cube.obj", "assets/skybox02.dds");
 	g_cubeMap->setPosition(camera->getX(), camera->getY(), camera->getZ());
@@ -447,22 +446,22 @@ void RenderFrame(void)
 		DestroyWindow(g_hWnd);
 	}
 	if (Input->isKeyPressed(DIK_UPARROW)) {
-		camera->Forward(moveSpeed * Timer->deltaTime());
+		camera->Up(moveSpeed * Timer->deltaTime());
 	}
 	if (Input->isKeyPressed(DIK_DOWNARROW)) {
-		camera->Forward(-moveSpeed * Timer->deltaTime());
+		camera->Up(-moveSpeed * Timer->deltaTime());
 	}
 	if (Input->isKeyPressed(DIK_A)) {
-		camera->Rotate(-panningSpeed * Timer->deltaTime());
+		g_model->Strafe(moveSpeed * Timer->deltaTime());
 	}
 	if (Input->isKeyPressed(DIK_D)) {
-		camera->Rotate(panningSpeed * Timer->deltaTime());
+		g_model->Strafe(-moveSpeed * Timer->deltaTime());
 	}
 	if (Input->isKeyPressed(DIK_W)) {
-		camera->Pitch(panningSpeed * Timer->deltaTime());
+		g_model->Forward(moveSpeed * Timer->deltaTime());
 	}
 	if (Input->isKeyPressed(DIK_S)) {
-		camera->Pitch(-panningSpeed * Timer->deltaTime());
+		g_model->Forward(-moveSpeed * Timer->deltaTime());
 	}
 	if (Input->isKeyPressed(DIK_LEFTARROW)) {
 		camera->Strafe((moveSpeed / 8) * Timer->deltaTime());
