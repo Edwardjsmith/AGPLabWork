@@ -19,13 +19,13 @@
 #include <dxerr.h>
 #include <xnamath.h>
 
-#include "thirdPersonCamera.h"
+
 #include "text2D.h"
 #include "CubeMap.h"
 #include "timer.h"
 #include "input.h"
 #include "particleGenerator.h"
-
+#include "thirdPersonCamera.h"
 
 #define _XM_NO_INTRINSICS_
 #define XM_NO_ALIGNMENT
@@ -53,19 +53,26 @@ ID3D11DepthStencilView* g_pZBuffer;
 ID3D11ShaderResourceView* g_pTexture0;
 ID3D11SamplerState* g_pSampler0;
 
-thirdPersonCamera* camera;
+
 timer* Timer;
 Text2D* g_2DText;
 Model* g_model;
 CubeMap* g_cubeMap;
 input* Input;
 particleGenerator* particle;
+thirdPersonCamera* camera;
 
 XMVECTOR g_directional_light_shines_from;
 XMVECTOR g_directional_light_colour;
 XMVECTOR g_ambient_light_colour;
 
-float moveSpeed = 10.0f;
+float g_moveSpeed = 1.0f;
+float rotSpeed = 1.0f;
+int g_screenWidth = 640;
+int g_screenHeight = 480;
+
+int g_mouseX, g_mouseY;
+
 
 //Define vertex structure
 struct POS_COL_TEX_NORM_VERTEX//This will be added to and renamed in future tutorials
@@ -139,7 +146,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	// Main message loop
 	MSG msg = { 0 };
 	Input = new input();
-	Input->initKeyboard(g_hInst, g_hWnd);
+	Input->initInput(g_hInst, g_hWnd, g_screenWidth, g_screenHeight);
 	Timer = new timer();
 	while (msg.message != WM_QUIT)
 	{
@@ -439,38 +446,38 @@ void RenderFrame(void)
 	g_2DText->AddText("Hello!", -1.0f, 1.0f, 0.2f);
 	g_2DText->RenderText();*/
 
-	Input->readInputStates();
+	Input->readKeyboardStates();
+	Input->readMouseState();
+	Input->processMouseInput();
+	//Input->getMousePos(g_mouseX, g_mouseY);
 
 	if (Input->isKeyPressed(DIK_ESCAPE))
 	{
 		DestroyWindow(g_hWnd);
 	}
-	if (Input->isKeyPressed(DIK_UPARROW)) {
-		camera->Up(moveSpeed * Timer->deltaTime());
-	}
-	if (Input->isKeyPressed(DIK_DOWNARROW)) {
-		camera->Up(-moveSpeed * Timer->deltaTime());
+	if(Input->getCurrentMouseState().lY != Input->getLastMouseState().lY) {
+		camera->Up(((rotSpeed * 10) * Timer->deltaTime()) * Input->getCurrentMouseState().lY);
 	}
 	if (Input->isKeyPressed(DIK_A)) {
-		g_model->Strafe(moveSpeed * Timer->deltaTime());
+		g_model->Strafe(g_moveSpeed * Timer->deltaTime());
 	}
 	if (Input->isKeyPressed(DIK_D)) {
-		g_model->Strafe(-moveSpeed * Timer->deltaTime());
+		g_model->Strafe(-g_moveSpeed * Timer->deltaTime());
 	}
-	if (Input->isKeyPressed(DIK_W)) {
-		g_model->Forward(moveSpeed * Timer->deltaTime());
+	if (Input->isKeyPressed(DIK_W)) 
+	{
+		g_model->Forward(-g_moveSpeed * Timer->deltaTime());
 	}
-	if (Input->isKeyPressed(DIK_S)) {
-		g_model->Forward(-moveSpeed * Timer->deltaTime());
+	if (Input->isKeyPressed(DIK_S)) 
+	{
+		g_model->Forward(g_moveSpeed * Timer->deltaTime());
 	}
-	if (Input->isKeyPressed(DIK_LEFTARROW)) {
-		camera->Strafe((moveSpeed / 8) * Timer->deltaTime());
+	if (Input->getCurrentMouseState().lX != Input->getLastMouseState().lX)
+	{
+		camera->Strafe((rotSpeed * Timer->deltaTime()) * Input->getCurrentMouseState().lX);
+	}
 
-	}
-	if (Input->isKeyPressed(DIK_RIGHTARROW)) {
-		camera->Strafe((-moveSpeed / 8) * Timer->deltaTime());
-
-	}
+	
 
 	g_cubeMap->setPosition(camera->getX(), camera->getY(), camera->getZ());
 	g_pImmediateContext->ClearRenderTargetView(g_pBackBufferRTView, gClearColour);
@@ -483,8 +490,8 @@ void RenderFrame(void)
 	//g_pImmediateContext->PSSetSamplers(0, 1, &g_pSampler0);
 	//g_pImmediateContext->PSSetShaderResources(0, 1, &g_pTexture0);
 
-	g_model->Draw(&view, &projection);
-	g_cubeMap->Draw(&view, &projection);
+	g_model->Draw(&view, &projection, &camera->getPos());
+	//g_cubeMap->Draw(&view, &projection, &camera->getPos());
 
 	particle->Draw(&view, &projection, &camera->getPos(), Timer->getCurrentTime(), Timer->deltaTime());
 
@@ -518,7 +525,7 @@ HRESULT InitialiseWindow(HINSTANCE hInstance, int nCmdShow)
 
 	// Create window
 	g_hInst = hInstance;
-	RECT rc = { 0, 0, 640, 480 };
+	RECT rc = { 0, 0, g_screenWidth, g_screenHeight };
 	AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
 	g_hWnd = CreateWindow(Name, g_TutorialName, WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left,

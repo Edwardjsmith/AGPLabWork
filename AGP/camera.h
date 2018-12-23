@@ -5,7 +5,6 @@
 #define XM_NO_ALIGNMENT
 #include <xnamath.h>
 #include <math.h>
-#include "Model.h"
 
 class Camera
 {
@@ -25,6 +24,7 @@ public:
 	float getZ();
 
 	XMFLOAT3 getPos();
+
 
 protected:
 

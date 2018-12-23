@@ -1,7 +1,5 @@
 #include "Model.h"
 
-
-
 Model::Model(ID3D11Device * device, ID3D11DeviceContext * context, float rotation)
 {
 	m_pD3DDevice = device;
@@ -21,7 +19,7 @@ Model::Model(ID3D11Device * device, ID3D11DeviceContext * context, float rotatio
 
 Model::~Model()
 {
-	if (m_pConstantBuffer) m_pD3DDevice->Release();
+	if(m_pD3DDevice) m_pD3DDevice->Release();
 	if (m_pImmediateContext) m_pImmediateContext->Release();
 	if (m_pPShader) m_pPShader->Release();
 	if (m_pVShader) m_pVShader->Release();
@@ -29,6 +27,7 @@ Model::~Model()
 	if (m_pInputLayout) m_pInputLayout->Release();
 	if (m_pTexture) m_pTexture->Release();
 	if (m_pSampler) m_pSampler->Release();
+	if (m_pConstantBuffer) m_pConstantBuffer->Release();
 }
 
 HRESULT Model::LoadObjModel(const char * filename, const char* textureName)
@@ -146,12 +145,18 @@ HRESULT Model::LoadObjModel(const char * filename, const char* textureName)
 	return S_OK;
 }
 
-void Model::Draw(XMMATRIX* view, XMMATRIX* projection)
+void Model::Draw(XMMATRIX* view, XMMATRIX* projection, XMFLOAT3* cameraPos)
 {
 	//m_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	m_pImmediateContext->PSSetSamplers(0, 1, &m_pSampler);
 	m_pImmediateContext->PSSetShaderResources(0, 1, &m_pTexture);
+
+	m_dx = cameraPos->x - m_x;
+	m_dz = cameraPos->z - m_z;
+	m_yAngle = atan2(m_dx, m_dz) * (180.0 / XM_PI);
+
+
 
 	XMMATRIX world = XMMatrixScaling(m_scale, m_scale, m_scale);
 	world *= XMMatrixRotationX(XMConvertToRadians(m_xAngle));
@@ -260,9 +265,9 @@ void Model::Pitch(float deg_change)
 
 void Model::Forward(float movement)
 {
-	m_x += movement * m_dx;
-	m_y += movement * m_dy;
-	m_z += movement * m_dz;
+	m_x += m_dx * movement;
+	m_y += m_dy * movement;
+	m_z += m_dz * movement;
 }
 
 void Model::Up(float movement)
@@ -282,6 +287,11 @@ void Model::Strafe(float distance)
 XMVECTOR Model::getPos()
 {
 	return m_position = XMVectorSet(m_x, m_y, m_z, 0);;
+}
+
+void Model::setLook(XMVECTOR look)
+{
+	m_lookat = look;
 }
 
 void Model::setShaders()

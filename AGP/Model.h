@@ -14,7 +14,7 @@ public:
 	~Model();
 
 	virtual HRESULT LoadObjModel(const char* filename, const char* textureName);
-	virtual void Draw(XMMATRIX* view, XMMATRIX* projection);
+	virtual void Draw(XMMATRIX* view, XMMATRIX* projection, XMFLOAT3* cameraPos);
 
 	void setPosition(float x, float y, float z);
 
@@ -39,13 +39,17 @@ public:
 	void setZRotation(float value);
 	float getZRotation();
 
+
 	void Rotate(float deg_change);
 	void Pitch(float deg_change);
 	void Forward(float movement);
 	void Up(float movement);
 	void Strafe(float distance);
+	XMVECTOR getLook();
 
 	XMVECTOR getPos();
+
+	void setLook(XMVECTOR look);
 
 protected:
 

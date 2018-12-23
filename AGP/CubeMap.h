@@ -7,7 +7,7 @@ public:
 	CubeMap(ID3D11Device* device, ID3D11DeviceContext* context);
 	~CubeMap();
 
-	void Draw(XMMATRIX* view, XMMATRIX* projection) override;
+	void Draw(XMMATRIX* view, XMMATRIX* projection, XMFLOAT3* cameraPos) override;
 	HRESULT LoadObjModel(const char* filename, const char* textureName) override;
 
 private:

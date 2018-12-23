@@ -1,4 +1,5 @@
 #pragma once
+#include "Model.h"
 #include "camera.h"
 class thirdPersonCamera :
 	public Camera
@@ -10,6 +11,7 @@ public:
 	XMMATRIX GetViewMatrix();
 	void Strafe(float distance);
 	void Up(float movement);
+	XMVECTOR getLook();
 private:
 	Model* m_Target;
 	XMVECTOR m_offset;

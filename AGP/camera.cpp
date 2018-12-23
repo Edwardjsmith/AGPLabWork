@@ -52,7 +52,7 @@ void Camera::Strafe(float movement)
 XMMATRIX Camera::GetViewMatrix()
 {
 	m_position = XMVectorSet(m_x, m_y, m_z, 0.0);
-	m_lookat = XMVectorSet(m_x, m_y + m_dy, m_z + m_dz, 0.0);
+	m_lookat = XMVectorSet(m_x + m_dx, m_y + m_dy, m_z + m_dz, 0.0);
 	m_up = XMVectorSet(0.0, 1.0, 0.0, 0.0);
 	return XMMatrixLookAtLH(m_position, m_lookat, m_up);
 }
@@ -80,4 +80,6 @@ XMFLOAT3 Camera::getPos()
 {
 	return XMFLOAT3(m_x, m_y, m_z);
 }
+
+
 
