@@ -5,7 +5,7 @@ class thirdPersonCamera :
 	public Camera
 {
 public:
-	thirdPersonCamera(float x, float y, float z, float c_rot, float pitch, Model* target);
+	thirdPersonCamera(float x, float y, float z, float c_rot, float pitch, float screenW, float screenH, Model* target);
 	~thirdPersonCamera();
 
 	XMMATRIX GetViewMatrix();

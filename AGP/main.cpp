@@ -57,10 +57,13 @@ ID3D11SamplerState* g_pSampler0;
 timer* Timer;
 Text2D* g_2DText;
 Model* g_model;
+Model* g_model2;
 CubeMap* g_cubeMap;
 input* Input;
 particleGenerator* particle;
-thirdPersonCamera* camera;
+thirdPersonCamera* mainCamera;
+Camera* miniMap;
+
 
 XMVECTOR g_directional_light_shines_from;
 XMVECTOR g_directional_light_colour;
@@ -177,13 +180,21 @@ HRESULT InitialiseGraphics()
 	g_model = new Model(g_pD3DDevice, g_pImmediateContext, 0);
 	g_model->LoadObjModel((char*)"assets/cube.obj", "assets/texture.bmp");
 	g_model->setPosition(0, 0, 15);
-	camera = new thirdPersonCamera(0, 0, -0.5, 0, 0, g_model);
+
+	g_model2 = new Model(g_pD3DDevice, g_pImmediateContext, 0);
+	g_model2->LoadObjModel((char*)"assets/cube.obj", "assets/texture.bmp");
+	g_model2->setPosition(0, 0, 30);
+
+	mainCamera = new thirdPersonCamera(0, 0, -0.5, 0, 0, 640, 480, g_model);
 	g_cubeMap = new CubeMap(g_pD3DDevice, g_pImmediateContext);
 	g_cubeMap->LoadObjModel((char*)"assets/cube.obj", "assets/skybox02.dds");
-	g_cubeMap->setPosition(camera->getX(), camera->getY(), camera->getZ());
+	g_cubeMap->setPosition(mainCamera->getX(), mainCamera->getY(), mainCamera->getZ());
 
 	particle = new particleGenerator(g_pD3DDevice, g_pImmediateContext, 0);
 	particle->createParticle();
+
+	miniMap = new Camera(g_model->getX(), 10.0f, g_model->getZ(), 0, 0, 50, 50);
+	miniMap->setLookat(g_model->getX(), g_model->getY(), g_model->getZ());
 
 	//g_model->setPosition(0, 0, 15);
 	//Define vertices of a triangle - screen coordinates -1.0 to +1.0
@@ -456,7 +467,7 @@ void RenderFrame(void)
 		DestroyWindow(g_hWnd);
 	}
 	if(Input->getCurrentMouseState().lY != Input->getLastMouseState().lY) {
-		camera->Up(((rotSpeed * 10) * Timer->deltaTime()) * Input->getCurrentMouseState().lY);
+		mainCamera->Up(((rotSpeed * 10) * Timer->deltaTime()) * Input->getCurrentMouseState().lY);
 	}
 	if (Input->isKeyPressed(DIK_A)) {
 		g_model->Strafe(g_moveSpeed * Timer->deltaTime());
@@ -474,26 +485,31 @@ void RenderFrame(void)
 	}
 	if (Input->getCurrentMouseState().lX != Input->getLastMouseState().lX)
 	{
-		camera->Strafe((rotSpeed * Timer->deltaTime()) * Input->getCurrentMouseState().lX);
+		mainCamera->Strafe((rotSpeed * Timer->deltaTime()) * Input->getCurrentMouseState().lX);
 	}
 
 	
 
-	g_cubeMap->setPosition(camera->getX(), camera->getY(), camera->getZ());
+	g_cubeMap->setPosition(mainCamera->getX(), mainCamera->getY(), mainCamera->getZ());
 	g_pImmediateContext->ClearRenderTargetView(g_pBackBufferRTView, gClearColour);
 	g_pImmediateContext->ClearDepthStencilView(g_pZBuffer, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 	XMMATRIX projection, view;
-	view = camera->GetViewMatrix();// Camera->View(Camera->getPos(), Camera->getLook(), Camera->getUp());
+	view = mainCamera->GetViewMatrix();// Camera->View(Camera->getPos(), Camera->getLook(), Camera->getUp());
 	projection = XMMatrixPerspectiveFovLH(XMConvertToRadians(45.0), 640 / 480, 1.0, 100.0);
 
 	//g_pImmediateContext->PSSetSamplers(0, 1, &g_pSampler0);
 	//g_pImmediateContext->PSSetShaderResources(0, 1, &g_pTexture0);
 
-	g_model->Draw(&view, &projection, &camera->getPos());
-	//g_cubeMap->Draw(&view, &projection, &camera->getPos());
+	miniMap->setPos(g_model->getX(), miniMap->getY(), g_model->getZ());
+	miniMap->setLookat(g_model->getX(), g_model->getY(), g_model->getZ());
 
-	particle->Draw(&view, &projection, &camera->getPos(), Timer->getCurrentTime(), Timer->deltaTime());
+	g_model->Draw(&view, &projection, &mainCamera->getPos());
+	g_model2->Draw(&view, &projection, &mainCamera->getPos());
+	g_cubeMap->Draw(&view, &projection, &g_model->getPosFloat3());
+	g_model->checkCollision(g_model2);
+
+	particle->Draw(&view, &projection, &mainCamera->getPos(), Timer->getCurrentTime(), Timer->deltaTime());
 
 	g_2DText->AddText("Hello!", -1.0f, 1.0f, 0.2f);
 	g_2DText->RenderText();
@@ -703,13 +719,14 @@ void ShutdownD3D()
 	if (g_pD3DDevice) g_pD3DDevice->Release();
 	if (g_pBackBufferRTView) g_pBackBufferRTView->Release();
 	if (g_pD3DDevice) g_pD3DDevice->Release();
-	
+	if (miniMap) delete miniMap;
 	if (g_pTexture0) g_pTexture0->Release();
 	if (g_pSampler0) g_pSampler0->Release();
 	if (g_2DText) delete g_2DText;
 	if (Timer) delete Timer;
-	if (camera) delete camera;
+	if (mainCamera) delete mainCamera;
 	if (g_model) delete g_model;
+	if (g_model2) delete g_model2;
 	if (Input) delete Input;
 	if (particle) delete particle;
 

@@ -10,7 +10,7 @@ class Camera
 {
 public:
 
-	Camera(float x, float y, float z, float c_rot, float pitch);
+	Camera(float x, float y, float z, float c_rot, float pitch, float screenW, float screenH);
 	void Rotate(float deg_change);
 	void Pitch(float deg_change);
 	void Forward(float movement);
@@ -23,10 +23,20 @@ public:
 	float getY();
 	float getZ();
 
+	void updateView();
+	void setPos(float x, float y, float z);
+
+	XMMATRIX getProjection();
+	XMMATRIX getView();
+
 	XMFLOAT3 getPos();
 
 
+	void setLookat(float x, float y, float z);
 protected:
+
+
+	XMMATRIX projection, view;
 
 	float m_x, m_y, m_z, m_dx, m_dy, m_dz, m_camera_rotation, m_camera_pitch;
 
@@ -34,6 +44,8 @@ protected:
 
 	float mAngle;
 	float dx, dy, dz;
+
+	float screenWidth, screenheight;
 
 	
 };

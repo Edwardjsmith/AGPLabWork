@@ -1,5 +1,5 @@
 #include "Model.h"
-
+#include <iostream>
 Model::Model(ID3D11Device * device, ID3D11DeviceContext * context, float rotation)
 {
 	m_pD3DDevice = device;
@@ -141,6 +141,7 @@ HRESULT Model::LoadObjModel(const char * filename, const char* textureName)
 		return hr;
 	}
 
+	calcCentrePoint();
 
 	return S_OK;
 }
@@ -289,9 +290,58 @@ XMVECTOR Model::getPos()
 	return m_position = XMVectorSet(m_x, m_y, m_z, 0);;
 }
 
+XMFLOAT3 Model::getPosFloat3()
+{
+	return XMFLOAT3(m_x, m_y, m_z);
+}
+
 void Model::setLook(XMVECTOR look)
 {
 	m_lookat = look;
+}
+
+XMVECTOR Model::getBoundingSphereWorldSpacePosition()
+{
+	XMMATRIX world = XMMatrixScaling(m_scale, m_scale, m_scale);
+	world *= XMMatrixRotationX(XMConvertToRadians(m_xAngle));
+	world *= XMMatrixRotationY(XMConvertToRadians(m_yAngle));
+	world *= XMMatrixRotationZ(XMConvertToRadians(m_zAngle));
+	world *= XMMatrixTranslation(m_x, m_y, m_z);
+	XMVECTOR offset = XMVectorSet(m_boundingSphereCentreX, m_boundingSphereCentreY, m_boundingSphereCentreZ, 0);
+
+	return offset = XMVector3Transform(offset, world);
+}
+
+float Model::getSphereRadius()
+{
+	return m_boundingSphereRadius * m_scale;
+}
+
+bool Model::checkCollision(Model* otherModel)
+{
+	if (otherModel != this)
+	{
+		float distance = sqrt((XMVectorGetX(this->getBoundingSphereWorldSpacePosition()) - XMVectorGetX(otherModel->getBoundingSphereWorldSpacePosition()) *  (XMVectorGetX(this->getBoundingSphereWorldSpacePosition()) - XMVectorGetX(otherModel->getBoundingSphereWorldSpacePosition())
+			+ (XMVectorGetY(this->getBoundingSphereWorldSpacePosition()) - XMVectorGetY(otherModel->getBoundingSphereWorldSpacePosition()) *  (XMVectorGetY(this->getBoundingSphereWorldSpacePosition()) - XMVectorGetY(otherModel->getBoundingSphereWorldSpacePosition()) +
+			(XMVectorGetZ(this->getBoundingSphereWorldSpacePosition()) - XMVectorGetZ(otherModel->getBoundingSphereWorldSpacePosition()) *  (XMVectorGetZ(this->getBoundingSphereWorldSpacePosition()) - XMVectorGetZ(otherModel->getBoundingSphereWorldSpacePosition()))))))));
+
+		float radii = this->m_boundingSphereRadius + otherModel->getSphereRadius();
+
+		if (distance <= radii)
+		{
+			std::cout << "Collision!";
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+
+	}
+	else
+	{
+		return false;
+	}
 }
 
 void Model::setShaders()
@@ -299,4 +349,20 @@ void Model::setShaders()
 	m_pImmediateContext->VSSetShader(m_pVShader, 0, 0);
 	m_pImmediateContext->PSSetShader(m_pPShader, 0, 0);
 	m_pImmediateContext->IASetInputLayout(m_pInputLayout);
+}
+
+void Model::calcCentrePoint()
+{
+	for (int i = 0; i < m_pObject->numverts; i++)
+	{
+		XMVECTOR centre = XMLoadFloat3(&m_pObject->vertices[i].Pos);
+		vertMin = XMVectorMin(vertMin, centre);
+		vertMax = XMVectorMax(vertMax, centre);
+	}
+
+	m_boundingSphereCentreX = vertMax.x - vertMin.x;
+	m_boundingSphereCentreY = vertMax.y - vertMin.y;
+	m_boundingSphereCentreZ = vertMax.z - vertMin.z;
+
+	m_boundingSphereRadius = (sqrt((m_boundingSphereCentreX * m_boundingSphereCentreX) + (m_boundingSphereCentreY * m_boundingSphereCentreY) + (m_boundingSphereCentreZ * m_boundingSphereCentreZ)));
 }

@@ -1,8 +1,10 @@
 #include "camera.h"
 
 
-Camera::Camera(float x, float y, float z, float c_rot, float pitch)
+Camera::Camera(float x, float y, float z, float c_rot, float pitch, float screenW, float screenH)
 {
+	screenWidth = screenW;
+	screenheight = screenH;
 	m_x = x;
 	m_y = y;
 	m_z = z;
@@ -11,6 +13,9 @@ Camera::Camera(float x, float y, float z, float c_rot, float pitch)
 	m_dx = sin(m_camera_rotation * (XM_PI / 180));
 	m_dz = cos(m_camera_rotation * (XM_PI / 180));
 	m_dy = m_camera_pitch * (XM_PI / 180);
+
+	view = GetViewMatrix();// Camera->View(Camera->getPos(), Camera->getLook(), Camera->getUp());
+	projection = XMMatrixPerspectiveFovLH(XMConvertToRadians(45.0), screenW / screenH, 1.0, 100.0);
 }
 void Camera::Rotate(float deg_change) 
 {
@@ -76,9 +81,35 @@ float Camera::getZ()
 	return m_z;
 }
 
+void Camera::updateView()
+{
+	view = GetViewMatrix();// Camera->View(Camera->getPos(), Camera->getLook(), Camera->getUp());
+	projection = XMMatrixPerspectiveFovLH(XMConvertToRadians(45.0), screenWidth / screenheight, 1.0, 100.0);
+}
+
+void Camera::setPos(float x, float y, float z)
+{
+	m_position = XMVectorSet(x, y, z, 0);
+}
+
+XMMATRIX Camera::getProjection()
+{
+	return projection;
+}
+
+XMMATRIX Camera::getView()
+{
+	return view;
+}
+
 XMFLOAT3 Camera::getPos()
 {
 	return XMFLOAT3(m_x, m_y, m_z);
+}
+
+void Camera::setLookat(float x, float y, float z)
+{
+	m_lookat = XMVectorSet(x, y, z, 0);
 }
 
 
