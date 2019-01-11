@@ -107,6 +107,11 @@ XMFLOAT3 Camera::getPos()
 	return XMFLOAT3(m_x, m_y, m_z);
 }
 
+float Camera::getRotSpeed()
+{
+	return rotationSpeed;
+}
+
 void Camera::setLookat(float x, float y, float z)
 {
 	m_lookat = XMVectorSet(x, y, z, 0);

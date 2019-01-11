@@ -40,21 +40,18 @@ public:
 	float getZRotation();
 
 
-	void Rotate(float deg_change);
-	void Pitch(float deg_change);
-	void Forward(float movement);
-	void Up(float movement);
-	void Strafe(float distance);
-
 	XMVECTOR getPos();
 	XMFLOAT3 getPosFloat3();
 
 	void setLook(XMVECTOR look);
 
+
+	float m_boundingSphereCentreX, m_boundingSphereCentreY, m_boundingSphereCentreZ, m_boundingSphereRadius;
+
 	XMVECTOR getBoundingSphereWorldSpacePosition();
+
 	float getSphereRadius();
-	
-	bool checkCollision(Model* otherModel);
+
 
 protected:
 
@@ -75,9 +72,12 @@ protected:
 	XMVECTOR vertMin, vertMax;
 	void setShaders();
 
-	MODEL_CONSTANT_BUFFER model_cb_values;
 
 	void calcCentrePoint();
+
+	MODEL_CONSTANT_BUFFER model_cb_values;
+
+	
 
 	string shaderType;
 	string shaderFile;
@@ -87,7 +87,7 @@ protected:
 	ID3D11SamplerState* m_pSampler;
 
 	XMVECTOR m_position, m_up, m_lookat, m_rotation, m_right;
-	float m_boundingSphereCentreX, m_boundingSphereCentreY, m_boundingSphereCentreZ, m_boundingSphereRadius;
+	
 
 
 };

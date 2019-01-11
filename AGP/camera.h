@@ -31,7 +31,7 @@ public:
 
 	XMFLOAT3 getPos();
 
-
+	float getRotSpeed();
 	void setLookat(float x, float y, float z);
 protected:
 
@@ -46,7 +46,7 @@ protected:
 	float dx, dy, dz;
 
 	float screenWidth, screenheight;
-
+	float rotationSpeed = 10;
 	
 };
 
