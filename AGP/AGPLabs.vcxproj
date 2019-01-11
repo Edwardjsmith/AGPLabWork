@@ -138,11 +138,14 @@
   <ItemGroup>
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="CubeMap.cpp" />
+    <ClCompile Include="enemy.cpp" />
+    <ClCompile Include="entity.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="objfilemodel.cpp" />
     <ClCompile Include="particleGenerator.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="text2D.cpp" />
     <ClCompile Include="thirdPersonCamera.cpp" />
     <ClCompile Include="timer.cpp" />
@@ -182,10 +185,13 @@
   <ItemGroup>
     <ClInclude Include="camera.h" />
     <ClInclude Include="CubeMap.h" />
+    <ClInclude Include="enemy.h" />
+    <ClInclude Include="entity.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="objfilemodel.h" />
     <ClInclude Include="particleGenerator.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="text2D.h" />
     <ClInclude Include="thirdPersonCamera.h" />
     <ClInclude Include="timer.h" />

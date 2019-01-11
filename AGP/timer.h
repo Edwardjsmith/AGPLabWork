@@ -15,6 +15,8 @@ public:
 	void tick();
 
 	float getCurrentTime();
+	void calculateFramesPerSecond();
+	float getFPS();
 
 private:
 
@@ -28,6 +30,9 @@ private:
 	float mCurrTime;
 
 	bool mStopped;
+	float mFrameCount = 0;
+	float mfps;
+	float mStartTime = 0;
 
 };
 

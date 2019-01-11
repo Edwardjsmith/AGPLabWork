@@ -20,7 +20,9 @@ struct PARTICLE_CONSTANT_BUFFER
 class particleGenerator : public Model
 {
 public:
-	particleGenerator(ID3D11Device* device, ID3D11DeviceContext* context, float rotation);
+	enum particleEffects { RAINBOW_FOUNTAIN, RAIN };
+	particleEffects effects;
+	particleGenerator(ID3D11Device* device, ID3D11DeviceContext* context, float rotation, particleEffects type);
 	~particleGenerator();
 
 	int createParticle();
@@ -44,10 +46,10 @@ private:
 	float m_untilParticle;
 	float RandomZeroToOne();
 	float RandomNegOneToPosOne();
+	float RandomPosOnScreen(float rangeMin, float rangeMax);
 	float m_age;
 
-	enum particleEffects {RAINBOW_FOUNTAIN};
-	particleEffects effects;
+	
 
 	bool m_isActive;
 

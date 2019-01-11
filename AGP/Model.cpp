@@ -146,17 +146,12 @@ HRESULT Model::LoadObjModel(const char * filename, const char* textureName)
 	return S_OK;
 }
 
-void Model::Draw(XMMATRIX* view, XMMATRIX* projection, XMFLOAT3* cameraPos)
+void Model::Draw(XMMATRIX* view, XMMATRIX* projection)
 {
 	//m_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	m_pImmediateContext->PSSetSamplers(0, 1, &m_pSampler);
 	m_pImmediateContext->PSSetShaderResources(0, 1, &m_pTexture);
-
-	m_dx = cameraPos->x - m_x;
-	m_dz = cameraPos->z - m_z;
-	m_yAngle = atan2(m_dx, m_dz) * (180.0 / XM_PI);
-
 
 
 	XMMATRIX world = XMMatrixScaling(m_scale, m_scale, m_scale);

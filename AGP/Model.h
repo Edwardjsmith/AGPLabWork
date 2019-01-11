@@ -14,7 +14,7 @@ public:
 	~Model();
 
 	virtual HRESULT LoadObjModel(const char* filename, const char* textureName);
-	virtual void Draw(XMMATRIX* view, XMMATRIX* projection, XMFLOAT3* cameraPos);
+	virtual void Draw(XMMATRIX* view, XMMATRIX* projection);
 
 	void setPosition(float x, float y, float z);
 

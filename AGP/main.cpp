@@ -22,6 +22,8 @@
 
 #include "text2D.h"
 #include "CubeMap.h"
+#include "enemy.h"
+#include "Player.h"
 #include "timer.h"
 #include "input.h"
 #include "particleGenerator.h"
@@ -56,11 +58,12 @@ ID3D11SamplerState* g_pSampler0;
 
 timer* Timer;
 Text2D* g_2DText;
-Model* g_model;
-Model* g_model2;
+Player* player;
+enemy* Enemy;
 CubeMap* g_cubeMap;
 input* Input;
-particleGenerator* particle;
+particleGenerator* particleFountain;
+particleGenerator* rain;
 thirdPersonCamera* mainCamera;
 Camera* miniMap;
 
@@ -177,24 +180,28 @@ HRESULT InitialiseGraphics()
 	HRESULT hr = S_OK;
 
 	
-	g_model = new Model(g_pD3DDevice, g_pImmediateContext, 0);
-	g_model->LoadObjModel((char*)"assets/cube.obj", "assets/texture.bmp");
-	g_model->setPosition(0, 0, 15);
+	player = new Player(g_pD3DDevice, g_pImmediateContext, 0);
+	player->LoadObjModel((char*)"assets/cube.obj", "assets/texture.bmp");
+	player->setPosition(0, 0, 15);
 
-	g_model2 = new Model(g_pD3DDevice, g_pImmediateContext, 0);
-	g_model2->LoadObjModel((char*)"assets/cube.obj", "assets/texture.bmp");
-	g_model2->setPosition(0, 0, 30);
+	Enemy = new enemy(g_pD3DDevice, g_pImmediateContext, 0, player);
+	Enemy->LoadObjModel((char*)"assets/cube.obj", "assets/texture.bmp");
+	Enemy->setPosition(0, 0, 30);
 
-	mainCamera = new thirdPersonCamera(0, 0, -0.5, 0, 0, 640, 480, g_model);
+	mainCamera = new thirdPersonCamera(0, 0, -0.5, 0, 0, 640, 480, player);
 	g_cubeMap = new CubeMap(g_pD3DDevice, g_pImmediateContext);
 	g_cubeMap->LoadObjModel((char*)"assets/cube.obj", "assets/skybox02.dds");
 	g_cubeMap->setPosition(mainCamera->getX(), mainCamera->getY(), mainCamera->getZ());
 
-	particle = new particleGenerator(g_pD3DDevice, g_pImmediateContext, 0);
-	particle->createParticle();
+	particleFountain = new particleGenerator(g_pD3DDevice, g_pImmediateContext, 0, particleGenerator::RAINBOW_FOUNTAIN);
+	particleFountain->createParticle();
 
-	miniMap = new Camera(g_model->getX(), 10.0f, g_model->getZ(), 0, 0, 50, 50);
-	miniMap->setLookat(g_model->getX(), g_model->getY(), g_model->getZ());
+	rain = new particleGenerator(g_pD3DDevice, g_pImmediateContext, 0, particleGenerator::RAIN);
+	rain->createParticle();
+	
+
+	miniMap = new Camera(player->getX(), 10.0f, player->getZ(), 0, 0, 50, 50);
+	miniMap->setLookat(player->getX(), player->getY(), player->getZ());
 
 	//g_model->setPosition(0, 0, 15);
 	//Define vertices of a triangle - screen coordinates -1.0 to +1.0
@@ -398,65 +405,7 @@ HRESULT InitialiseGraphics()
 // Render frame
 void RenderFrame(void)
 {
-	// RENDER HERE
-	/*g_pImmediateContext->ClearRenderTargetView(g_pBackBufferRTView, gClearColour);
-	g_pImmediateContext->ClearDepthStencilView(g_pZBuffer, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-
-	g_directional_light_shines_from = XMVectorSet(0.0f, 0.0f, -1.0f, 0.0f);
-	g_directional_light_colour = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-	g_ambient_light_colour = XMVectorSet(0.1f, 0.1f, 0.1f, 1.0f);
-	//Select which primitive type to use
-	g_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-
-	//XMMATRIX rotation = XMMatrixRotationY(0);
-
-	//Set vertex buffer
-	UINT stride = sizeof(POS_COL_TEX_NORM_VERTEX);
-	UINT offset = 0;
-	g_pImmediateContext->IASetVertexBuffers(0, 1, &g_pVertexBuffer, &stride, &offset);
-
-	XMMATRIX transpose;
-	CONSTANT_BUFFER0 cb0_values;
-	cb0_values.RedAmount = 0.5f; //50 % of vertex shader value
-
-	XMMATRIX projection, world, view;
-	view = camera->GetViewMatrix();// Camera->View(Camera->getPos(), Camera->getLook(), Camera->getUp());
-	world = XMMatrixRotationX(XMConvertToRadians(0));
-	world *= XMMatrixRotationY(XMConvertToRadians(0));
-	world *= XMMatrixRotationZ(XMConvertToRadians(0));
-	world *= XMMatrixTranslation(0, 0, 15);
-
-	projection = XMMatrixPerspectiveFovLH(XMConvertToRadians(45.0), 640 / 480, 1.0, 100.0);
-
-	cb0_values.WorldViewProjection = world * view * projection;
-	cb0_values.directional_light_colour = g_directional_light_colour;
-	cb0_values.ambient_light_colour = g_ambient_light_colour;
-	cb0_values.directional_light_vector = XMVector3Transform(g_directional_light_shines_from, transpose);
-	cb0_values.directional_light_vector = XMVector3Normalize(cb0_values.directional_light_vector);
-
-	//Upload these new values
-
-	g_pImmediateContext->UpdateSubresource(g_pConstantBuffer0, 0, 0, &cb0_values, 0, 0);
-	g_pImmediateContext->VSSetConstantBuffers(0, 1, &g_pConstantBuffer0);
-
-	g_model->Draw(&view, &projection);
-	g_pImmediateContext->PSSetSamplers(0, 1, &g_pSampler0);
-	g_pImmediateContext->PSSetShaderResources(0, 1, &g_pTexture0);
-
-	g_pImmediateContext->VSSetShader(g_pVertexShader, 0, 0);
-	g_pImmediateContext->PSSetShader(g_pPixelShader, 0, 0);
-
-	g_pImmediateContext->IASetInputLayout(g_pInputLayout);
-
-
-	//Draw the vertex buffer to the back buffer
-	g_pImmediateContext->Draw(36, 0);
-
-	//
-	g_2DText->AddText("Hello!", -1.0f, 1.0f, 0.2f);
-	g_2DText->RenderText();*/
-
+	
 	Input->readKeyboardStates();
 	Input->readMouseState();
 	Input->processMouseInput();
@@ -470,18 +419,18 @@ void RenderFrame(void)
 		mainCamera->Up(((rotSpeed * 10) * Timer->deltaTime()) * Input->getCurrentMouseState().lY);
 	}
 	if (Input->isKeyPressed(DIK_A)) {
-		g_model->Strafe(g_moveSpeed * Timer->deltaTime());
+		player->Strafe(-g_moveSpeed * Timer->deltaTime());
 	}
 	if (Input->isKeyPressed(DIK_D)) {
-		g_model->Strafe(-g_moveSpeed * Timer->deltaTime());
+		player->Strafe(g_moveSpeed * Timer->deltaTime());
 	}
 	if (Input->isKeyPressed(DIK_W)) 
 	{
-		g_model->Forward(-g_moveSpeed * Timer->deltaTime());
+		player->Forward(-g_moveSpeed * Timer->deltaTime());
 	}
 	if (Input->isKeyPressed(DIK_S)) 
 	{
-		g_model->Forward(g_moveSpeed * Timer->deltaTime());
+		player->Forward(g_moveSpeed * Timer->deltaTime());
 	}
 	if (Input->getCurrentMouseState().lX != Input->getLastMouseState().lX)
 	{
@@ -501,17 +450,20 @@ void RenderFrame(void)
 	//g_pImmediateContext->PSSetSamplers(0, 1, &g_pSampler0);
 	//g_pImmediateContext->PSSetShaderResources(0, 1, &g_pTexture0);
 
-	miniMap->setPos(g_model->getX(), miniMap->getY(), g_model->getZ());
-	miniMap->setLookat(g_model->getX(), g_model->getY(), g_model->getZ());
+	miniMap->setPos(player->getX(), miniMap->getY(), player->getZ());
+	miniMap->setLookat(player->getX(), player->getY(), player->getZ());
 
-	g_model->Draw(&view, &projection, &mainCamera->getPos());
-	g_model2->Draw(&view, &projection, &mainCamera->getPos());
-	g_cubeMap->Draw(&view, &projection, &g_model->getPosFloat3());
-	g_model->checkCollision(g_model2);
+	player->Draw(&view, &projection, &mainCamera->getPos());
+	Enemy->Draw(&view, &projection, player);
+	//Enemy->moveToTarget(0.1f * Timer->deltaTime());
+	g_cubeMap->Draw(&view, &projection);
+	player->checkCollision(Enemy);
 
-	particle->Draw(&view, &projection, &mainCamera->getPos(), Timer->getCurrentTime(), Timer->deltaTime());
+	particleFountain->Draw(&view, &projection, &mainCamera->getPos(), Timer->getCurrentTime(), Timer->deltaTime());
+	rain->Draw(&view, &projection, &player->getPosFloat3(), Timer->getCurrentTime(), Timer->deltaTime());
 
-	g_2DText->AddText("Hello!", -1.0f, 1.0f, 0.2f);
+	Timer->calculateFramesPerSecond();
+	g_2DText->AddText( "FPS: " + to_string((int)Timer->getFPS()), -1.0f, 1.0f, 0.2f);
 	g_2DText->RenderText();
 
 	// Display what has just been rendered
@@ -529,6 +481,7 @@ HRESULT InitialiseWindow(HINSTANCE hInstance, int nCmdShow)
 
 	// Register class
 	WNDCLASSEX wcex = { 0 };
+
 	wcex.cbSize = sizeof(WNDCLASSEX);
 	wcex.style = CS_HREDRAW | CS_VREDRAW;
 	wcex.lpfnWndProc = WndProc;
@@ -725,10 +678,11 @@ void ShutdownD3D()
 	if (g_2DText) delete g_2DText;
 	if (Timer) delete Timer;
 	if (mainCamera) delete mainCamera;
-	if (g_model) delete g_model;
-	if (g_model2) delete g_model2;
+	if (player) delete player;
+	if (Enemy) delete Enemy;
 	if (Input) delete Input;
-	if (particle) delete particle;
+	if (particleFountain) delete particleFountain;
+	if (rain) delete rain;
 
 	
 }

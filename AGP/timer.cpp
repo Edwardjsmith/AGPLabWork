@@ -14,6 +14,7 @@ timer::timer()
 
 	QueryPerformanceFrequency((LARGE_INTEGER*)&countsPerSec);
 	mSecondsPerCount = 1.0 / (double)countsPerSec;
+	mStartTime = getCurrentTime();
 }
 
 
@@ -23,7 +24,7 @@ timer::~timer()
 
 float timer::gameTime() const
 {
-	return 0.0f;
+	return mCurrTime;
 }
 
 float timer::deltaTime() const
@@ -95,4 +96,21 @@ void timer::tick()
 float timer::getCurrentTime()
 {
 	return mCurrTime;
+}
+
+void timer::calculateFramesPerSecond()
+{
+	mFrameCount++;
+
+	if (getCurrentTime() >= (mStartTime + 1000))
+	{
+		mfps = mFrameCount;
+		mFrameCount = 0;
+		mStartTime = getCurrentTime();
+	}
+}
+
+float timer::getFPS()
+{
+	return mfps;
 }
