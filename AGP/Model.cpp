@@ -19,7 +19,7 @@ Model::Model(ID3D11Device * device, ID3D11DeviceContext * context, float rotatio
 
 Model::~Model()
 {
-	if(m_pD3DDevice) m_pD3DDevice->Release();
+	if (m_pD3DDevice != nullptr) m_pD3DDevice->Release();
 	if (m_pImmediateContext) m_pImmediateContext->Release();
 	if (m_pPShader) m_pPShader->Release();
 	if (m_pVShader) m_pVShader->Release();

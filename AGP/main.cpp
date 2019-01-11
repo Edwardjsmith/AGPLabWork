@@ -439,7 +439,7 @@ void RenderFrame(void)
 
 	
 
-	g_cubeMap->setPosition(mainCamera->getX(), mainCamera->getY(), mainCamera->getZ());
+	g_cubeMap->setPosition(player->getX(), player->getY(), player->getZ());
 	g_pImmediateContext->ClearRenderTargetView(g_pBackBufferRTView, gClearColour);
 	g_pImmediateContext->ClearDepthStencilView(g_pZBuffer, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
@@ -455,7 +455,7 @@ void RenderFrame(void)
 
 	player->Draw(&view, &projection, &mainCamera->getPos());
 	Enemy->Draw(&view, &projection, player);
-	//Enemy->moveToTarget(0.1f * Timer->deltaTime());
+	Enemy->moveToTarget(g_moveSpeed * Timer->deltaTime());
 	g_cubeMap->Draw(&view, &projection);
 	player->checkCollision(Enemy);
 
