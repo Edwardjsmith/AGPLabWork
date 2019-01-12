@@ -4,7 +4,7 @@ class CubeMap :
 	public Model
 {
 public:
-	CubeMap(ID3D11Device* device, ID3D11DeviceContext* context);
+	CubeMap(ID3D11Device* device, ID3D11DeviceContext* context, float scaleX, float Scaley, float scaleZ);
 	~CubeMap();
 
 	void Draw(XMMATRIX* view, XMMATRIX* projection);

@@ -15,7 +15,7 @@ struct MODEL_CONSTANT_BUFFER
 class Model
 {
 public:
-	Model(ID3D11Device* device, ID3D11DeviceContext* context, float rotation);
+	Model(ID3D11Device* device, ID3D11DeviceContext* context, float rotation, float scaleX, float Scaley, float scaleZ);
 	~Model();
 
 	virtual HRESULT LoadObjModel(const char* filename, const char* textureName);
@@ -32,8 +32,7 @@ public:
 	void setZ(float z);
 	float getZ();
 
-	void setScale(float value);
-	float getScale();
+
 
 	void setXRotation(float value);
 	float getXRotation();
@@ -43,6 +42,10 @@ public:
 
 	void setZRotation(float value);
 	float getZRotation();
+
+	float getScaleX();
+	float getScaleY();
+	float getScaleZ();
 
 
 	XMVECTOR getPos();
@@ -71,7 +74,6 @@ protected:
 
 	float			m_x, m_y, m_z, m_dx, m_dy, m_dz;
 	float			m_xAngle, m_yAngle, m_zAngle;
-	float			m_scale;
 	float			m_model_rotation;
 
 	XMVECTOR vertMin, vertMax;
@@ -98,6 +100,7 @@ protected:
 	XMVECTOR lightColour; //16
 	XMVECTOR ambientColour; //16
 
+	float mScaleX, mScaleY, mScaleZ;
 
 };
 

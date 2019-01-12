@@ -5,13 +5,18 @@
 
 
 
-Model::Model(ID3D11Device * device, ID3D11DeviceContext * context, float rotation)
+Model::Model(ID3D11Device * device, ID3D11DeviceContext * context, float rotation, float scaleX, float ScaleY, float scaleZ)
 {
 	m_pD3DDevice = device;
 	m_pImmediateContext = context;
+
+	mScaleX = scaleX;
+	mScaleY = ScaleY;
+	mScaleZ = scaleZ;
+
 	m_x = m_y = m_z = 0.0f;
 	m_xAngle = m_yAngle = m_zAngle = 0.0f;
-	m_scale = 1.0f;
+
 	m_model_rotation = rotation;
 
 	m_dx = sin(m_model_rotation * (XM_PI / 180));
@@ -19,6 +24,8 @@ Model::Model(ID3D11Device * device, ID3D11DeviceContext * context, float rotatio
 
 	shaderFile = "model_shaders.hlsl";
 	shaderType = "Model";
+
+
 
 	getBoundingSphereWorldSpacePosition();
 }
@@ -164,7 +171,7 @@ void Model::Draw(XMMATRIX* view, XMMATRIX* projection)
 	lightColour = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
 	ambientColour = XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
 
-	XMMATRIX world = XMMatrixScaling(m_scale, m_scale, m_scale);
+	XMMATRIX world = XMMatrixScaling(mScaleX, mScaleY,mScaleZ);
 	world *= XMMatrixRotationX(XMConvertToRadians(m_xAngle));
 	world *= XMMatrixRotationY(XMConvertToRadians(m_yAngle));
 	world *= XMMatrixRotationZ(XMConvertToRadians(m_zAngle));
@@ -225,15 +232,7 @@ float Model::getZ()
 	return m_z;
 }
 
-void Model::setScale(float value)
-{
-	m_scale += value;
-}
 
-float Model::getScale()
-{
-	return m_scale;
-}
 
 void Model::setXRotation(float value)
 {
@@ -264,7 +263,22 @@ float Model::getZRotation()
 	return m_zAngle;
 }
 
+float Model::getScaleX()
+{
+	return 0.0f;
+}
 
+
+
+float Model::getScaleY()
+{
+	return 0;
+}
+
+float Model::getScaleZ()
+{
+	return 0;
+}
 
 XMVECTOR Model::getPos()
 {
@@ -293,7 +307,7 @@ void Model::setShaders()
 XMVECTOR Model::getBoundingSphereWorldSpacePosition()
 {
 	
-		XMMATRIX world = XMMatrixScaling(m_scale, m_scale, m_scale);
+		XMMATRIX world = XMMatrixScaling(mScaleX, mScaleY, mScaleZ);
 		world *= XMMatrixRotationX(XMConvertToRadians(m_xAngle));
 		world *= XMMatrixRotationY(XMConvertToRadians(m_yAngle));
 		world *= XMMatrixRotationZ(XMConvertToRadians(m_zAngle));
@@ -304,7 +318,7 @@ XMVECTOR Model::getBoundingSphereWorldSpacePosition()
 }
 float Model::getSphereRadius()
 {
-	return m_boundingSphereRadius * m_scale;
+	return m_boundingSphereRadius * mScaleY;
 }
 
 

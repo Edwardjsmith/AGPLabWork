@@ -1,5 +1,5 @@
 #pragma once
-
+#include "Model.h"
 
 class entity;
 class Physics
@@ -10,7 +10,9 @@ public:
 
 	static Physics* getInstance();
 
-	bool checkCollision(entity* modelA, entity* modelB);
+	bool checkSphereCollision(Model* modelA, Model* modelB);
+	bool checkAABB(Model* modelA, Model* modelB);
+
 
 private:
 	Physics();

@@ -29,7 +29,8 @@
 #include "input.h"
 #include "particleGenerator.h"
 #include "thirdPersonCamera.h"
-#include "Grid.h"
+#include "Physics.h"
+
 
 #define _XM_NO_INTRINSICS_
 #define XM_NO_ALIGNMENT
@@ -98,8 +99,7 @@ private:
 	float b = 0.6f;
 
 	float gClearColour[4] = { r, g, b, 1.0f };
-
-	Grid* grid;
+	float gravityScale;
 
 
 };

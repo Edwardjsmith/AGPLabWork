@@ -49,7 +49,7 @@ private:
 	float RandomPosOnScreen(float rangeMin, float rangeMax);
 	float m_age;
 
-	
+	float m_scale;
 
 	bool m_isActive;
 
