@@ -1,5 +1,10 @@
 #include "Model.h"
 #include <iostream>
+
+
+
+
+
 Model::Model(ID3D11Device * device, ID3D11DeviceContext * context, float rotation)
 {
 	m_pD3DDevice = device;
@@ -108,7 +113,7 @@ HRESULT Model::LoadObjModel(const char * filename, const char* textureName)
 	ZeroMemory(&constant_buffer_desc, sizeof(constant_buffer_desc));
 
 	constant_buffer_desc.Usage = D3D11_USAGE_DEFAULT; //Can use Update subresource to update
-	constant_buffer_desc.ByteWidth = 64; //Set size, must be multiple of 16;
+	constant_buffer_desc.ByteWidth = 112; //Set size, must be multiple of 16;
 	constant_buffer_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER; //Use as const buffer
 
 	hr = m_pD3DDevice->CreateBuffer(&constant_buffer_desc, NULL, &m_pConstantBuffer);
@@ -155,13 +160,23 @@ void Model::Draw(XMMATRIX* view, XMMATRIX* projection)
 	m_pImmediateContext->PSSetShaderResources(0, 1, &m_pTexture);
 
 
+	directionOfLight = XMVectorSet(0.25f, 0.5f, -1.0f, 0.0f);
+	lightColour = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
+	ambientColour = XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
+
 	XMMATRIX world = XMMatrixScaling(m_scale, m_scale, m_scale);
 	world *= XMMatrixRotationX(XMConvertToRadians(m_xAngle));
 	world *= XMMatrixRotationY(XMConvertToRadians(m_yAngle));
 	world *= XMMatrixRotationZ(XMConvertToRadians(m_zAngle));
 	world *= XMMatrixTranslation(m_x, m_y, m_z);
 
+	XMMATRIX transpose = XMMatrixTranspose(world);
+
 	model_cb_values.WorldViewProjection = world * (*view) * (*projection);
+	model_cb_values.lightColour = lightColour;
+	model_cb_values.ambientColour = ambientColour;
+	model_cb_values.directionOfLight = XMVector3Transform(directionOfLight, transpose);
+	model_cb_values.directionOfLight = XMVector3Normalize(model_cb_values.directionOfLight);
 
 	m_pImmediateContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
 	m_pImmediateContext->UpdateSubresource(m_pConstantBuffer, 0, 0, &model_cb_values, 0, 0);
@@ -277,14 +292,15 @@ void Model::setShaders()
 
 XMVECTOR Model::getBoundingSphereWorldSpacePosition()
 {
-	XMMATRIX world = XMMatrixScaling(m_scale, m_scale, m_scale);
-	world *= XMMatrixRotationX(XMConvertToRadians(m_xAngle));
-	world *= XMMatrixRotationY(XMConvertToRadians(m_yAngle));
-	world *= XMMatrixRotationZ(XMConvertToRadians(m_zAngle));
-	world *= XMMatrixTranslation(m_x, m_y, m_z);
-	XMVECTOR offset = XMVectorSet(m_boundingSphereCentreX, m_boundingSphereCentreY, m_boundingSphereCentreZ, 0);
+	
+		XMMATRIX world = XMMatrixScaling(m_scale, m_scale, m_scale);
+		world *= XMMatrixRotationX(XMConvertToRadians(m_xAngle));
+		world *= XMMatrixRotationY(XMConvertToRadians(m_yAngle));
+		world *= XMMatrixRotationZ(XMConvertToRadians(m_zAngle));
+		world *= XMMatrixTranslation(m_x, m_y, m_z);
+		XMVECTOR offset = XMVectorSet(m_boundingSphereCentreX, m_boundingSphereCentreY, m_boundingSphereCentreZ, 0);
 
-	return offset = XMVector3Transform(offset, world);
+		return offset = XMVector3Transform(offset, world);
 }
 float Model::getSphereRadius()
 {

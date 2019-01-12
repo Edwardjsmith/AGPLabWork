@@ -27,12 +27,16 @@ public:
 	float oldYPos;
 	float oldZPos;
 
+	XMVECTOR startPos;
+
 protected:
 	float mSpeed = 1.0f;
 	float rotSpeed = 1.0f;
 
-	entity* prev;
-	entity* next;
+	entity* prev = nullptr;
+	entity* next = nullptr;
+
+	
 
 
 	

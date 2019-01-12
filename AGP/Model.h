@@ -5,6 +5,11 @@
 struct MODEL_CONSTANT_BUFFER
 {
 	XMMATRIX WorldViewProjection; //64 bytes (4 x 4 x4)
+	XMVECTOR directionOfLight; //16
+	XMVECTOR lightColour; //16
+	XMVECTOR ambientColour; //16
+
+	//148 total
 };
 
 class Model
@@ -57,12 +62,12 @@ protected:
 
 	ID3D11Device*			m_pD3DDevice;
 	ID3D11DeviceContext*	m_pImmediateContext;
-
 	ObjFileModel*		m_pObject;
 	ID3D11VertexShader*	m_pVShader;
 	ID3D11PixelShader*	m_pPShader;
 	ID3D11InputLayout*	m_pInputLayout;
 	ID3D11Buffer*		m_pConstantBuffer;
+
 
 	float			m_x, m_y, m_z, m_dx, m_dy, m_dz;
 	float			m_xAngle, m_yAngle, m_zAngle;
@@ -87,7 +92,11 @@ protected:
 	ID3D11SamplerState* m_pSampler;
 
 	XMVECTOR m_position, m_up, m_lookat, m_rotation, m_right;
-	
+
+
+	XMVECTOR directionOfLight; //16
+	XMVECTOR lightColour; //16
+	XMVECTOR ambientColour; //16
 
 
 };
