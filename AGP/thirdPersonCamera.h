@@ -9,12 +9,19 @@ public:
 	~thirdPersonCamera();
 
 	XMMATRIX GetViewMatrix();
-	void Strafe(float distance);
+	void Orbit(float distance);
 	void Up(float movement);
 	XMVECTOR getLook();
+
+	void setRotationXZ(float rotation);
+	void setRotationY(float rotation);
+
 private:
 	Model* m_Target;
 	XMVECTOR m_offset;
+	XMVECTOR m_distanceFromTarget;
 
+	float rotationXZ = 0;
+	float rotationY = 0;
 };
 

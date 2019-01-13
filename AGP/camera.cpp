@@ -20,6 +20,15 @@ Camera::Camera(float x, float y, float z, float c_rot, float pitch, float screen
 void Camera::Rotate(float deg_change) 
 {
 	m_camera_rotation += deg_change;
+	if (m_camera_rotation > 360)
+	{
+		m_camera_rotation = 0;
+	}
+	if (m_camera_rotation < 0)
+	{
+		m_camera_rotation = 360;
+	}
+
 	m_dx = sin(m_camera_rotation * (XM_PI / 180));
 	m_dz = cos(m_camera_rotation * (XM_PI / 180));
 }
@@ -27,7 +36,17 @@ void Camera::Rotate(float deg_change)
 void Camera::Pitch(float deg_change) 
 {
 	m_camera_pitch += deg_change;
-	m_dy = m_camera_pitch * (XM_PI / 180);
+
+	if (m_camera_pitch > 180)
+	{
+		m_camera_rotation = 180;
+	}
+	if (m_camera_pitch < 0)
+	{
+		m_camera_rotation = 0;
+	}
+
+	m_dy = cos(m_camera_pitch * (XM_PI / 180));
 }
 
 void Camera::Forward(float movement) 
@@ -51,6 +70,8 @@ void Camera::Strafe(float movement)
 
 	m_x += m_right.x * movement;
 	m_z += m_right.z * movement;
+
+	
 	
 }
 
@@ -89,7 +110,9 @@ void Camera::updateView()
 
 void Camera::setPos(float x, float y, float z)
 {
-	m_position = XMVectorSet(x, y, z, 0);
+	m_x = x;
+	m_y = y;
+	m_z = z;
 }
 
 XMMATRIX Camera::getProjection()

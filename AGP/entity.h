@@ -14,6 +14,8 @@ public:
 	virtual void Update(timer* time, float gravityScale, bool touchingFloor);
 
 	float getSpeed();
+	float getRotSpeed();
+	float getStrafeSpeed();
 
 	void Rotate(float deg_change);
 	void Pitch(float deg_change);
@@ -29,8 +31,9 @@ public:
 	bool touchingFloor;
 
 protected:
-	float mSpeed = 1.0f;
-	float rotSpeed = 1.0f;
+	float mSpeed = 10.0f;
+	float mStrafe = 1.0f;
+	float mRotSpeed = 1.0f;
 	float mGravityScale;
 	
 };

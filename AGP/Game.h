@@ -4,6 +4,7 @@
 #define DIK_A               0x1E
 #define DIK_S               0x1F
 #define DIK_D               0x20
+#define DIK_SPACE			0x39
 
 #define DIK_UP              0xC8    /* UpArrow on arrow keypad */
 #define DIK_LEFT            0xCB    /* LeftArrow on arrow keypad */
