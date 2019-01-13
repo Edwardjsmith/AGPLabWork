@@ -102,7 +102,7 @@ private:
 	float b = 0.6f;
 
 	float gClearColour[4] = { r, g, b, 1.0f };
-	float gravityScale = 0.0f;
+	float gravityScale = 1.0f;
 
 
 };

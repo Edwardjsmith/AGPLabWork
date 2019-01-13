@@ -44,7 +44,8 @@ private:
 	ID3D11Buffer* pVertexBuffer; 
 
 public:
-
+	struct coliaion_box { float width = 0.0f, height=0.0f, depth = 0.0f, lowwidth = 0.0f, lowheight = 0.0f, lowdepth = 0.0f; };
+	coliaion_box m_box;
 	struct xyz { float x, y, z; };	//used for vertices and normals during file parse
 	struct xy { float x, y; };		//used for texture coordinates during file parse
 

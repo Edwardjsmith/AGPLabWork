@@ -263,19 +263,19 @@ float Model::getZRotation()
 
 float Model::getScaleX()
 {
-	return 0.0f;
+	return mScaleX;
 }
 
 
 
 float Model::getScaleY()
 {
-	return 0;
+	return mScaleY;
 }
 
 float Model::getScaleZ()
 {
-	return 0;
+	return mScaleZ;
 }
 
 XMVECTOR Model::getPos()

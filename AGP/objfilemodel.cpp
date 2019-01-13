@@ -272,6 +272,18 @@ bool ObjFileModel::createVB()
 	memcpy(ms.pData, vertices, sizeof(vertices[0])*numverts);							// Copy the data
 	pImmediateContext->Unmap(pVertexBuffer, NULL);										// Unlock the buffer
 
+	for (int i = 0; i < position_list.size(); i++) {
+		if (position_list.at(i).x > m_box.width) m_box.width = position_list.at(i).x;
+		if (position_list.at(i).y > m_box.height) m_box.height = position_list.at(i).y;
+		if (position_list.at(i).z > m_box.depth) m_box.depth = position_list.at(i).z;
+		if (position_list.at(i).x < m_box.lowwidth) m_box.lowwidth = position_list.at(i).x;
+		if (position_list.at(i).y < m_box.lowheight) m_box.lowheight = position_list.at(i).y;
+		if (position_list.at(i).z < m_box.lowdepth) m_box.lowdepth = position_list.at(i).z;
+	}
+
+
+
+
 	return true;
 }
 

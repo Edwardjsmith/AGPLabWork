@@ -60,13 +60,13 @@ public:
 	XMVECTOR calculateAABB();
 
 	float getSphereRadius();
-
+	ObjFileModel*		m_pObject;
 	void Cleanup();
 protected:
 
 	ID3D11Device*			m_pD3DDevice;
 	ID3D11DeviceContext*	m_pImmediateContext;
-	ObjFileModel*		m_pObject;
+
 	ID3D11VertexShader*	m_pVShader;
 	ID3D11PixelShader*	m_pPShader;
 	ID3D11InputLayout*	m_pInputLayout;
