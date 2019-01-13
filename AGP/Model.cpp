@@ -25,8 +25,6 @@ Model::Model(ID3D11Device * device, ID3D11DeviceContext * context, float rotatio
 	shaderFile = "model_shaders.hlsl";
 	shaderType = "Model";
 
-
-
 	getBoundingSphereWorldSpacePosition();
 }
 
@@ -321,6 +319,11 @@ float Model::getSphereRadius()
 	return m_boundingSphereRadius * mScaleY;
 }
 
+
+void Model::Cleanup()
+{
+
+}
 
 void Model::calcCentrePoint()
 {

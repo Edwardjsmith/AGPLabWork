@@ -30,6 +30,7 @@
 #include "particleGenerator.h"
 #include "thirdPersonCamera.h"
 #include "Physics.h"
+#include "soundManager.h"
 
 
 #define _XM_NO_INTRINSICS_
@@ -49,6 +50,8 @@ public:
 
 	int mCmdShow;
 	HINSTANCE mInstance, mPrevInstance;
+
+	void Cleanup();
 
 	bool running;
 private:
@@ -80,7 +83,7 @@ private:
 	particleGenerator* rain;
 	thirdPersonCamera* mainCamera;
 	Camera* miniMap;
-
+	Model* floor;
 
 	XMVECTOR g_directional_light_shines_from;
 	XMVECTOR g_directional_light_colour;
@@ -99,7 +102,7 @@ private:
 	float b = 0.6f;
 
 	float gClearColour[4] = { r, g, b, 1.0f };
-	float gravityScale;
+	float gravityScale = 0.0f;
 
 
 };

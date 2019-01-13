@@ -57,10 +57,11 @@ public:
 	float m_boundingSphereCentreX, m_boundingSphereCentreY, m_boundingSphereCentreZ, m_boundingSphereRadius;
 
 	XMVECTOR getBoundingSphereWorldSpacePosition();
+	XMVECTOR calculateAABB();
 
 	float getSphereRadius();
 
-
+	void Cleanup();
 protected:
 
 	ID3D11Device*			m_pD3DDevice;
