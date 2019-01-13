@@ -12,9 +12,10 @@ public:
 
 	void Draw(XMMATRIX* view, XMMATRIX* projection);
 	void Jump(float jumpForce);
-
+	void Forward(float movement, float targetX, float targetZ);
 	
 private:
 	input* Input;
+	
 };
 

@@ -31,7 +31,7 @@ public:
 	bool touchingFloor;
 
 protected:
-	float mSpeed = 10.0f;
+	float mSpeed = 5.0f;
 	float mStrafe = 1.0f;
 	float mRotSpeed = 1.0f;
 	float mGravityScale;

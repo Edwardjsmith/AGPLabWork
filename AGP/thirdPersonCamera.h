@@ -15,13 +15,12 @@ public:
 
 	void setRotationXZ(float rotation);
 	void setRotationY(float rotation);
-
+	float rotationXZ = 0;
 private:
 	Model* m_Target;
 	XMVECTOR m_offset;
 	XMVECTOR m_distanceFromTarget;
 
-	float rotationXZ = 0;
 	float rotationY = 0;
 };
 
