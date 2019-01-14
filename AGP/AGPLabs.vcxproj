@@ -147,6 +147,7 @@
     <ClCompile Include="objfilemodel.cpp" />
     <ClCompile Include="particleGenerator.cpp" />
     <ClCompile Include="Physics.cpp" />
+    <ClCompile Include="Pickup.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="soundManager.cpp" />
     <ClCompile Include="text2D.cpp" />
@@ -168,6 +169,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="particle_shaders.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="reflect_shader.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
@@ -196,6 +201,7 @@
     <ClInclude Include="objfilemodel.h" />
     <ClInclude Include="particleGenerator.h" />
     <ClInclude Include="Physics.h" />
+    <ClInclude Include="Pickup.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="soundManager.h" />
     <ClInclude Include="text2D.h" />

@@ -20,6 +20,7 @@
 #include <windows.h>
 #include <dxerr.h>
 #include <xnamath.h>
+#include <fstream>
 
 
 #include "text2D.h"
@@ -32,6 +33,7 @@
 #include "thirdPersonCamera.h"
 #include "Physics.h"
 #include "soundManager.h"
+#include "Pickup.h"
 
 
 #define _XM_NO_INTRINSICS_
@@ -85,7 +87,7 @@ private:
 	thirdPersonCamera* mainCamera;
 	Camera* miniMap;
 	Model* floor;
-
+	Pickup* pickup;
 	XMVECTOR g_directional_light_shines_from;
 	XMVECTOR g_directional_light_colour;
 	XMVECTOR g_ambient_light_colour;
@@ -106,5 +108,6 @@ private:
 	float gravityScale = 1.0f;
 
 
+	
 };
 

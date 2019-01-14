@@ -25,13 +25,16 @@ Model::Model(ID3D11Device * device, ID3D11DeviceContext * context, float rotatio
 	shaderFile = "model_shaders.hlsl";
 	shaderType = "Model";
 
+	m_pTexture = nullptr;
+	m_pSampler = nullptr;
+
 	getBoundingSphereWorldSpacePosition();
 }
 
 Model::~Model()
 {
-	if (m_pD3DDevice != nullptr) m_pD3DDevice->Release();
-	if (m_pImmediateContext) m_pImmediateContext->Release();
+	//if (m_pD3DDevice != nullptr) m_pD3DDevice->Release();
+	//if (m_pImmediateContext) m_pImmediateContext->Release();
 	if (m_pPShader) m_pPShader->Release();
 	if (m_pVShader) m_pVShader->Release();
 	if (m_pObject) delete m_pObject;
@@ -41,7 +44,7 @@ Model::~Model()
 	if (m_pConstantBuffer) m_pConstantBuffer->Release();
 }
 
-HRESULT Model::LoadObjModel(const char * filename, const char* textureName)
+HRESULT Model::LoadObjModel(const char * filename)
 {
 	HRESULT hr = S_OK;
 	m_pObject = new ObjFileModel((char*)filename, m_pD3DDevice, m_pImmediateContext);
@@ -118,7 +121,7 @@ HRESULT Model::LoadObjModel(const char * filename, const char* textureName)
 	ZeroMemory(&constant_buffer_desc, sizeof(constant_buffer_desc));
 
 	constant_buffer_desc.Usage = D3D11_USAGE_DEFAULT; //Can use Update subresource to update
-	constant_buffer_desc.ByteWidth = 112; //Set size, must be multiple of 16;
+	constant_buffer_desc.ByteWidth = constantBufferByteWidth; //Set size, must be multiple of 16;
 	constant_buffer_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER; //Use as const buffer
 
 	hr = m_pD3DDevice->CreateBuffer(&constant_buffer_desc, NULL, &m_pConstantBuffer);
@@ -129,15 +132,15 @@ HRESULT Model::LoadObjModel(const char * filename, const char* textureName)
 		return hr;
 	}
 
-	hr = D3DX11CreateShaderResourceViewFromFile(m_pD3DDevice, textureName, NULL, NULL, &m_pTexture, NULL);
+	/*hr = D3DX11CreateShaderResourceViewFromFile(m_pD3DDevice, textureName, NULL, NULL, &m_pTexture, NULL);
 
 	if (FAILED(hr))
 	{
 		DXTRACE_MSG("Failed to create texture");
 		return hr;
-	}
+	}*/
 
-	D3D11_SAMPLER_DESC sampler_desc;
+	/*D3D11_SAMPLER_DESC sampler_desc;
 	ZeroMemory(&sampler_desc, sizeof(sampler_desc));
 	sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 	sampler_desc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
@@ -150,7 +153,7 @@ HRESULT Model::LoadObjModel(const char * filename, const char* textureName)
 	{
 		DXTRACE_MSG("Failed to create sampler");
 		return hr;
-	}
+	}*/
 
 	calcCentrePoint();
 
@@ -163,7 +166,6 @@ void Model::Draw(XMMATRIX* view, XMMATRIX* projection)
 
 	m_pImmediateContext->PSSetSamplers(0, 1, &m_pSampler);
 	m_pImmediateContext->PSSetShaderResources(0, 1, &m_pTexture);
-
 
 	directionOfLight = XMVectorSet(0.25f, 0.5f, -1.0f, 0.0f);
 	lightColour = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
@@ -293,6 +295,41 @@ void Model::setLook(XMVECTOR look)
 	m_lookat = look;
 }
 
+
+HRESULT Model::setSampler()
+{
+	HRESULT hr;
+	D3D11_SAMPLER_DESC sampler_desc;
+	ZeroMemory(&sampler_desc, sizeof(sampler_desc));
+	sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	sampler_desc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampler_desc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampler_desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampler_desc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	hr = m_pD3DDevice->CreateSamplerState(&sampler_desc, &m_pSampler);
+	if (FAILED(hr))
+	{
+		DXTRACE_MSG("Failed to create sampler");
+		return hr;
+	}
+
+	return S_OK;
+}
+
+HRESULT Model::setTexture(const char* filename)
+{
+	HRESULT hr;
+	hr = D3DX11CreateShaderResourceViewFromFile(m_pD3DDevice, filename, NULL, NULL, &m_pTexture, NULL);
+
+	if (FAILED(hr))
+	{
+		DXTRACE_MSG("Failed to create texture");
+		return hr;
+	}
+
+	return S_OK;
+}
 
 void Model::setShaders()
 {

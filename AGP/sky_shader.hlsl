@@ -20,7 +20,6 @@ VOut SkyVS(float4 position : POSITION, float2 texcoord : TEXCOORD)//, float3 nor
 	float4 default_color = { 1.0, 1.0, 1.0, 1.0 };
 	output.position = mul(WVPMatrix, position);
 	output.texcoord = position.xyz;
-	output.position = mul(WVPMatrix, position);
 	output.color = default_color;
 
 	return output;
@@ -28,5 +27,5 @@ VOut SkyVS(float4 position : POSITION, float2 texcoord : TEXCOORD)//, float3 nor
 
 float4 SkyPS(float4 position : SV_POSITION, float4 color : COLOR, float3 texcoord : TEXCOORD) : SV_TARGET
 {
-	return cube0.Sample(sampler0, texcoord);// * color;
+    return cube0.Sample(sampler0, texcoord); // * color;
 }

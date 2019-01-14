@@ -18,7 +18,7 @@ public:
 	Model(ID3D11Device* device, ID3D11DeviceContext* context, float rotation, float scaleX, float Scaley, float scaleZ);
 	~Model();
 
-	virtual HRESULT LoadObjModel(const char* filename, const char* textureName);
+	virtual HRESULT LoadObjModel(const char* filename);
 	virtual void Draw(XMMATRIX* view, XMMATRIX* projection);
 
 	void setPosition(float x, float y, float z);
@@ -53,11 +53,12 @@ public:
 
 	void setLook(XMVECTOR look);
 
-
+	HRESULT setSampler();
+	HRESULT setTexture(const char* filename);
 	float m_boundingSphereCentreX, m_boundingSphereCentreY, m_boundingSphereCentreZ, m_boundingSphereRadius;
 
 	XMVECTOR getBoundingSphereWorldSpacePosition();
-	XMVECTOR calculateAABB();
+	//XMVECTOR calculateAABB();
 
 	float getSphereRadius();
 	ObjFileModel*		m_pObject;
@@ -102,6 +103,8 @@ protected:
 	XMVECTOR ambientColour; //16
 
 	float mScaleX, mScaleY, mScaleZ;
+
+	float constantBufferByteWidth = 112;
 
 };
 

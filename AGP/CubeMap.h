@@ -8,7 +8,7 @@ public:
 	~CubeMap();
 
 	void Draw(XMMATRIX* view, XMMATRIX* projection);
-	HRESULT LoadObjModel(const char* filename, const char* textureName) override;
+	HRESULT LoadObjModel(const char* filename, const char* textureName);
 
 private:
 	ID3D11RasterizerState* m_pRasterSolid = 0;
