@@ -5,6 +5,7 @@ c:\users\edwardsmith\documents\github\agplabwork\agp\x64\debug\thirdpersoncamera
 c:\users\edwardsmith\documents\github\agplabwork\agp\x64\debug\text2d.obj
 c:\users\edwardsmith\documents\github\agplabwork\agp\x64\debug\soundmanager.obj
 c:\users\edwardsmith\documents\github\agplabwork\agp\x64\debug\player.obj
+c:\users\edwardsmith\documents\github\agplabwork\agp\x64\debug\pickup.obj
 c:\users\edwardsmith\documents\github\agplabwork\agp\x64\debug\physics.obj
 c:\users\edwardsmith\documents\github\agplabwork\agp\x64\debug\particlegenerator.obj
 c:\users\edwardsmith\documents\github\agplabwork\agp\x64\debug\objfilemodel.obj
@@ -14,9 +15,8 @@ c:\users\edwardsmith\documents\github\agplabwork\agp\x64\debug\input.obj
 c:\users\edwardsmith\documents\github\agplabwork\agp\x64\debug\game.obj
 c:\users\edwardsmith\documents\github\agplabwork\agp\x64\debug\entity.obj
 c:\users\edwardsmith\documents\github\agplabwork\agp\x64\debug\enemy.obj
-c:\users\edwardsmith\documents\github\agplabwork\agp\x64\debug\cubemap.obj
 c:\users\edwardsmith\documents\github\agplabwork\agp\x64\debug\camera.obj
-c:\users\edwardsmith\documents\github\agplabwork\agp\x64\debug\pickup.obj
+c:\users\edwardsmith\documents\github\agplabwork\agp\x64\debug\cubemap.obj
 c:\users\edwardsmith\documents\github\agplabwork\agp\x64\debug\agplabs.exe
 c:\users\edwardsmith\documents\github\agplabwork\agp\x64\debug\agplabs.ilk
 c:\users\edwardsmith\documents\github\agplabwork\agp\x64\debug\agplabs.pdb
