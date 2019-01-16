@@ -22,6 +22,8 @@ public:
 	void Forward(float movement);
 	void Up(float movement);
 	void Strafe(float distance);
+
+	void knockBack(float knockbackForce, float targetX, float targetZ);
 	
 	float oldXPos;
 	float oldYPos;
@@ -29,6 +31,7 @@ public:
 
 	void setStartPos(float x, float y, float z);
 
+	float knockBackforce = 500;
 	bool touchingFloor;
 	float startX, startY, startZ;
 protected:

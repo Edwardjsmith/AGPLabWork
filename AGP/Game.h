@@ -91,7 +91,7 @@ private:
 	XMVECTOR g_directional_light_colour;
 	XMVECTOR g_ambient_light_colour;
 
-	//entity* pickup;
+	entity* moveableObstacle;
 
 	int mScreenWidth = 640;
 	int mScreenHeight = 480;
@@ -108,7 +108,6 @@ private:
 	float gravityScale = 1.0f;
 
 	std::vector<entity*> pickups;
-	std::vector<entity*> staticObstacle;
-	
+
 };
 
