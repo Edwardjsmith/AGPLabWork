@@ -33,8 +33,7 @@ Model::Model(ID3D11Device * device, ID3D11DeviceContext * context, float rotatio
 
 Model::~Model()
 {
-	//if (m_pD3DDevice != nullptr) m_pD3DDevice->Release();
-	//if (m_pImmediateContext) m_pImmediateContext->Release();
+
 	if (m_pPShader) m_pPShader->Release();
 	if (m_pVShader) m_pVShader->Release();
 	if (m_pObject) delete m_pObject;
@@ -132,28 +131,6 @@ HRESULT Model::LoadObjModel(const char * filename)
 		return hr;
 	}
 
-	/*hr = D3DX11CreateShaderResourceViewFromFile(m_pD3DDevice, textureName, NULL, NULL, &m_pTexture, NULL);
-
-	if (FAILED(hr))
-	{
-		DXTRACE_MSG("Failed to create texture");
-		return hr;
-	}*/
-
-	/*D3D11_SAMPLER_DESC sampler_desc;
-	ZeroMemory(&sampler_desc, sizeof(sampler_desc));
-	sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-	sampler_desc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-	sampler_desc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-	sampler_desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-	sampler_desc.MaxLOD = D3D11_FLOAT32_MAX;
-
-	hr = m_pD3DDevice->CreateSamplerState(&sampler_desc, &m_pSampler);
-	if (FAILED(hr))
-	{
-		DXTRACE_MSG("Failed to create sampler");
-		return hr;
-	}*/
 
 	calcCentrePoint();
 
@@ -199,7 +176,7 @@ void Model::setPosition(float x, float y, float z)
 	m_y = y;
 	m_z = z;
 
-	m_position = XMVectorSet(m_x, m_y, m_z, 0);
+	//m_position = XMVectorSet(m_x, m_y, m_z, 0);
 }
 
 void Model::setX(float x)

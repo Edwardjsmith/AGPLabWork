@@ -27,14 +27,17 @@ public:
 	float oldYPos;
 	float oldZPos;
 
-	XMVECTOR startPos;
-	bool touchingFloor;
+	void setStartPos(float x, float y, float z);
 
+	bool touchingFloor;
+	float startX, startY, startZ;
 protected:
 	float mSpeed = 1.0f;
 	float mStrafe = 1.0f;
 	float mRotSpeed = 1.0f;
 	float mGravityScale;
+
+	
 	
 };
 

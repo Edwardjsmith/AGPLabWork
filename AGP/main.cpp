@@ -15,8 +15,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	while (game->running)
 	{
-		game->Update();
 		game->RenderFrame();
+		game->Update();
 	}
 
 	delete game;

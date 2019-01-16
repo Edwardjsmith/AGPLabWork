@@ -77,7 +77,7 @@ private:
 
 
 	timer* Timer;
-	Text2D* g_2DText;
+	Text2D* mScore;
 	Player* player;
 	enemy* Enemy;
 	CubeMap* g_cubeMap;
@@ -87,11 +87,11 @@ private:
 	thirdPersonCamera* mainCamera;
 	Camera* miniMap;
 	Model* floor;
-	Pickup* pickup;
 	XMVECTOR g_directional_light_shines_from;
 	XMVECTOR g_directional_light_colour;
 	XMVECTOR g_ambient_light_colour;
 
+	//entity* pickup;
 
 	int mScreenWidth = 640;
 	int mScreenHeight = 480;
@@ -103,11 +103,12 @@ private:
 	float r = 0.1f;
 	float g = 0.2f;
 	float b = 0.6f;
-
+	int score = 0;
 	float gClearColour[4] = { r, g, b, 1.0f };
 	float gravityScale = 1.0f;
 
-
+	std::vector<entity*> pickups;
+	std::vector<entity*> staticObstacle;
 	
 };
 
